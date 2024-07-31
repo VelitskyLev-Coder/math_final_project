@@ -134,8 +134,9 @@ def beverton_holt_growth(r1, r2, m, steps):
 
 
 def main():
+    pass
     #fig_2_beverton_holt()
-    fig_2_beverton_holt2()
+    #fig_2_beverton_holt2()
     #beverton_holt_growth(1.4, 1.1, 0.2, 25)
     #fig_2_ricker()
 
