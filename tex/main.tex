@@ -1,0 +1,123 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+
+\title{Beverton--Holt Population Model}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\section{Beverton-Holt model}
+Let $N_t \geq 0$ denote the population at time $t$. We use the
+scaled Beverton--Holt model
+$$
+    N_{t+1} = F(N_t)
+            = \frac{K r N_t}{K + N_t},
+$$
+where $r \geq 0$ is the growth parameter and $K>0$ is the
+population-scale parameter.
+
+\subsection{Equilibria}
+
+An equilibrium $N^*$ satisfies $F(N^*)=N^*$. Therefore,
+$$
+    N^* = \frac{K r N^*}{K + N^*}.
+$$
+One solution is the extinction equilibrium
+$$
+    N^*_0=0.
+$$
+For a positive equilibrium, $N^*>0$, we divide by $N^*$ and obtain
+\begin{align*}
+    1 &= \frac{K r}{K+N^*},\\
+    K+N^* &= Kr,\\
+    N^* &= K(r-1).
+\end{align*}
+
+The positive equilibrium exists
+only when $r>1$ and the population can not be negative. Thus,
+$$
+\begin{cases}
+    r\leq 1: & N^*=0 \text{ is the only equilibrium},\\
+    r>1: & N^*=0 \text{ and } N^*=K(r-1) \text{ are equilibria}.
+\end{cases}
+$$
+
+\subsection{Stability}
+
+The derivative of the population map is
+$$
+    F'(N)=\frac{K^2r}{(K+N)^2}.
+$$
+At extinction,
+$$
+    F'(0)=r.
+$$
+Therefore, extinction is locally stable when $0\leq r<1$, unstable
+when $r>1$, and is a threshold case when $r=1$.
+
+At the positive equilibrium,
+$$
+    F'\bigl(K(r-1)\bigr)=\frac{1}{r}.
+$$
+Consequently, whenever the positive equilibrium exists, $r>1$, it is
+locally stable.
+
+\section{Introduction of Fishing Effort}
+
+We now introduce a fishing effort parameter $e$, where
+$$
+    0 \leq e \leq 1.
+$$
+The value $e=0$ means no fishing, while $e=1$ means complete removal
+after reproduction. With fishing, the one-population model becomes
+$$
+    N_{t+1}
+    = F_e(N_t)
+    = (1-e)\frac{K r N_t}{K+N_t}.
+$$
+
+An equilibrium satisfies $F_e(N^*)=N^*$:
+$$
+    N^* = (1-e)\frac{K r N^*}{K+N^*}.
+$$
+Again, $N^*=0$ is always an equilibrium. For a positive equilibrium,
+$N^*>0$, we divide by $N^*$ and obtain
+\begin{align*}
+    1 &= (1-e)\frac{K r}{K+N^*},\\
+    K+N^* &= K r(1-e),\\
+    N^* &= K\bigl(r(1-e)-1\bigr).
+\end{align*}
+
+Therefore, the positive equilibrium exists only when
+$$
+    r(1-e)>1.
+$$
+Equivalently, if $r>1$, persistence requires
+$$
+    e < 1-\frac{1}{r}.
+$$
+If $r(1-e)\leq 1$, then extinction is the only nonnegative equilibrium.
+
+The derivative of the fishing map is
+$$
+    F_e'(N)=\frac{K^2r(1-e)}{(K+N)^2}.
+$$
+At extinction,
+$$
+    F_e'(0)=r(1-e).
+$$
+Thus, extinction is locally stable when $r(1-e)<1$ and unstable when
+$r(1-e)>1$.
+
+At the positive equilibrium,
+$$
+    F_e'\bigl(K(r(1-e)-1)\bigr)=\frac{1}{r(1-e)}.
+$$
+Whenever the positive equilibrium exists, $r(1-e)>1$, this derivative
+has absolute value less than $1$, so the positive equilibrium is locally
+stable.
+
+\end{document}

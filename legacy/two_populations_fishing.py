@@ -3,7 +3,6 @@ from matplotlib import pyplot as plt
 from population_maps import TwoConnectedSubpopulationsModelWithFishing, BevertonHoltModel, TwoSubpopulations,\
     RickerModel
 import itertools
-import seaborn as sns
 
 
 def create_extinction_map():

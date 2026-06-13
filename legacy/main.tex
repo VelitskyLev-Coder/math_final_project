@@ -1,0 +1,169 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, graphicx, float, subcaption}
+
+\title{Extending the Metapopulation Model: Incorporating Fishing Efforts in Two Connected Subpopulations}
+\author{Your Name}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This study extends a traditional metapopulation model by incorporating fishing efforts into two connected subpopulations. The model introduces variables $e_A$ and $e_B$ representing the fishing efforts in each subpopulation, ranging from 0 to 1. We analyze extinction criteria using linearization and spectral radius analysis and explore the effects of maximizing fishing efforts at equilibrium. The results provide insights into sustainable management practices under varying conditions.
+\end{abstract}
+
+\section{Introduction}
+
+The study of connected subpopulations is crucial in understanding the dynamics of species distribution and the impacts of human activities, such as fishing. Previous research has explored the effects of migration and conservation strategies, highlighting the importance of spatial structure in population dynamics \cite{Franco2015}. However, there is limited work on the explicit inclusion of fishing efforts in such models.
+
+This paper aims to fill this gap by extending a metapopulation model to include fishing efforts denoted by $e_A$ and $e_B$. These efforts are represented as proportions ranging from 0 (no fishing) to 1 (maximum effort), allowing for a comprehensive analysis of their impact on population sustainability and economic yields.
+
+We employ linearization and spectral radius analysis to determine extinction criteria and examine various scenarios to understand the optimal conditions for maximizing fishing efforts while maintaining population viability.
+
+\section{Methods}
+
+\subsection{Model Description}
+The base model consists of two connected subpopulations, A and B, with discrete dynamics. The population sizes in these subpopulations at time $t$ are denoted by $N_A(t)$ and $N_B(t)$. The model assumes symmetric dispersal between the subpopulations and simple local dynamics.
+
+\subsection{Extension of the Model with Fishing Efforts}
+We introduce fishing efforts $e_A$ and $e_B$, which represent the fraction of the population removed due to fishing in subpopulations A and B, respectively. These efforts range from 0 to 1, with 0 indicating no fishing and 1 indicating maximum effort.
+
+The Beverton-Holt growth function used in the model is defined as:
+\begin{equation} 
+f(r, N) = \frac{rN}{1 + N},
+\end{equation}
+where $r$ is the intrinsic growth rate, and $N$ is the population size.
+
+The equations give the dynamics of the extended model:
+\begin{align}
+N_A(t+1) &= (1 - e_A) \left[(1-m) \frac{r_A N_A(t)}{1 + N_A(t)} + m \frac{r_B N_B(t)}{1 + N_B(t)}\right], \\
+N_B(t+1) &= (1 - e_B) \left[m \frac{r_A N_A(t)}{1 + N_A(t)} + (1-m) \frac{r_B N_B(t)}{1 + N_B(t)}\right],
+\end{align}
+where $m$ is the dispersal rate between the subpopulations.
+
+\subsection{Analysis Techniques}
+To determine the extinction criteria, we linearize the system around the origin and calculate the spectral radius. This analysis helps identify the stability of the system and the conditions under which the populations are likely to go extinct.
+
+
+\subsection{Analysis Techniques}
+To determine the extinction criteria, we linearize the system around the origin and calculate the spectral radius. This analysis helps identify the stability of the system and the conditions under which the populations are likely to go extinct.
+\section{Extinction Criteria Analysis}
+
+To analyze the extinction conditions in our model, we linearize the system near the equilibrium point $(0, 0)$ using the Beverton-Holt growth function:
+\[
+f(N) = \frac{rN}{1+N}
+\]
+with its derivative:
+\[
+f'(N) = \frac{r}{(1+N)^2} \underbrace{=}_{N\rightarrow 0} r.
+\]
+
+The linearized system's equations incorporating fishing efforts $e_A$ and $e_B$ are:
+\begin{equation*}
+    \begin{cases}
+        N_A(t+1) = \left((1-m)r_A N_A(t) + m r_B N_B(t) \right)(1-e_A), \\
+        N_B(t+1) = \left(m r_A N_A(t) + (1-m) r_B N_B(t) \right)(1-e_B).
+    \end{cases}
+\end{equation*}
+
+These equations can be represented in matrix form as:
+\[
+\begin{pmatrix}
+    N_A(t+1) \\
+    N_B(t+1)
+\end{pmatrix}
+= M
+\begin{pmatrix}
+    N_A(t) \\
+    N_B(t)
+\end{pmatrix},
+\]
+where the matrix $M$ is given by:
+\[
+M = \begin{pmatrix}
+    r_A (1-m)(1-e_A) & r_B m (1-e_A) \\
+    r_A m (1-e_B) & r_B (1-m)(1-e_B)
+\end{pmatrix}.
+\]
+
+The spectral radius $\rho(M)$ of the matrix $M$, which is the largest absolute value of its eigenvalues, determines the stability and long-term behavior of the system:
+\begin{itemize}
+    \item If $\rho(M) < 1$, the population will tend to zero (extinction) as time progresses.
+    \item If $\rho(M) > 1$, the population will grow or reach a stable state, thus avoiding extinction.
+\end{itemize}
+
+
+The conditions for extinction can be expressed in terms of the fishing efforts $e_A$ and $e_B$ as follows:
+\[
+e_B \geq \frac{A e_A + B}{C e_A + D} \quad \text{and} \quad C e_A + D \geq 0,
+\]
+where the coefficients are defined by:
+\begin{align*}
+    A &= -r_A + m r_A + r_A r_B - 2 m r_A r_B, \\
+    B &= -1 + r_A + r_B - m r_A - m r_B - r_A r_B + 2 m r_A r_B, \\
+    C &= r_A r_B - 2 m r_A r_B, \\
+    D &= r_B - m r_B - r_A r_B + 2 m r_B r_A.
+\end{align*}
+$$D = r_B(1-m-r_A(1-2m))$$
+
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.49\textwidth}
+        \includegraphics[width=\textwidth]{extinction_map_1.4_0.8_0.3.pdf}
+        \caption{Extinction Map for $r_A=1.4$, $r_B=0.8$, $m=0.3$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \includegraphics[width=\textwidth]{extinction_map_1.4_1.2_0.3.pdf}
+        \caption{Extinction Map for $r_A=1.4$, $r_B=1.2$, $m=0.3$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \includegraphics[width=\textwidth]{extinction_map_1.4_1.2_0.pdf}
+        \caption{Extinction Map for $r_A=1.4$, $r_B=1.2$, $m=0$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \includegraphics[width=\textwidth]{extinction_map_1.4_1.2_1.pdf}
+        \caption{Extinction Map for $r_A=1.4$, $r_B=1.2$, $m=0$}
+    \end{subfigure}
+    \caption{Extinction maps for various parameter sets showing the regions of extinction and survival based on fishing efforts $e_A$ and $e_B$. Green dots indicate survival points, while red dots represent extinction points. Additionally, the theoretical line separating the extinction and persistence regions is included, demonstrating alignment with the simulation results.}
+    \label{fig:extinction_maps}
+\end{figure}
+\section{Results}
+
+\subsection{Extinction Criteria}
+Using the Beverton-Holt model, we derive the conditions under which the subpopulations face extinction. The critical values of $e_A$ and $e_B$ are identified, beyond which the populations cannot sustain themselves.
+
+\subsection{Equilibrium Analysis}
+The equilibrium analysis reveals that under certain fishing efforts and dispersal rates, the system reaches a stable population size. The equilibrium is influenced by the values of $r_A$, $r_B$, $e_A$, and $e_B$, as well as the dispersal rate $m$.
+
+\subsection{Case Studies}
+We present several case studies using the Beverton-Holt growth function:
+\begin{itemize}
+    \item \textbf{Case 1: Both Subpopulations as Sources} - Analyzing the effect of fishing efforts when both subpopulations have intrinsic growth rates $r_A, r_B > 1$.
+    \item \textbf{Case 2: Source-Sink Dynamics} - Exploring scenarios where one subpopulation acts as a source ($r > 1$) and the other as a sink ($r < 1$).
+    \item \textbf{Case 3: Varying Fishing Efforts} - Evaluating the impact of different combinations of $e_A$ and $e_B$ on the overall population and economic yield.
+\end{itemize}
+
+\section{Discussion}
+
+The inclusion of fishing efforts in the metapopulation model provides new insights into sustainable management practices. Our results suggest that moderate fishing efforts can be sustained without jeopardizing the population, provided that the dispersal rates are appropriately managed.
+
+The analysis also highlights the importance of considering both local and global population dynamics in conservation strategies. For example, the creation of no-take zones or protected areas can significantly influence the overall population size and yield, depending on the dispersal rates and local growth conditions.
+
+Future research should consider more complex dynamics, including stochastic effects and the role of asymmetric dispersal, to further refine these findings and provide more comprehensive guidelines for resource management.
+
+
+\section{Conclusion}
+
+This study extends the classical metapopulation model by incorporating fishing efforts, providing a more comprehensive understanding of the impacts of human activities on population dynamics. The results highlight the need for balanced management strategies that consider both ecological sustainability and economic interests.
+
+By identifying the conditions under which populations can be sustained despite fishing pressures, this work contributes to the development of more effective conservation and management policies.
+
+\begin{thebibliography}{99}
+\bibitem{Franco2015} Franco, D., \& Ruiz-Herrera, A. (2015). To connect or not to connect isolated patches. \textit{Journal of Theoretical Biology}, 370, 72–80.
+% Add more references as needed
+\end{thebibliography}
+\end{document}
