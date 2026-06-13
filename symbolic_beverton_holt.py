@@ -17,6 +17,16 @@ class EquilibriumAnalysis:
     positive_equilibrium_derivative: sp.Expr
 
 
+@dataclass(frozen=True)
+class YieldAnalysis:
+    name: str
+    positive_equilibrium: sp.Expr
+    yield_expression: sp.Expr
+    yield_derivative: sp.Expr
+    critical_efforts: list[sp.Expr]
+    admissible_maximizer: sp.Expr
+
+
 def beverton_holt_map() -> sp.Expr:
     return K * r * N / (K + N)
 
@@ -28,20 +38,55 @@ def beverton_holt_map_with_fishing() -> sp.Expr:
 def analyze_equilibria(
     name: str,
     map_expression: sp.Expr,
-    positive_equilibrium: sp.Expr,
 ) -> EquilibriumAnalysis:
     derivative = sp.diff(map_expression, N)
+    equilibria = sp.solve(sp.factor(map_expression - N), N)
+    positive_equilibrium = nonzero_equilibrium(equilibria)
 
     return EquilibriumAnalysis(
         name=name,
         map_expression=map_expression,
-        equilibria=sp.solve(sp.factor(map_expression - N), N),
+        equilibria=equilibria,
         derivative=sp.simplify(derivative),
         extinction_derivative=sp.simplify(derivative.subs(N, 0)),
         positive_equilibrium=positive_equilibrium,
         positive_equilibrium_derivative=sp.simplify(
             derivative.subs(N, positive_equilibrium)
         ),
+    )
+
+
+def nonzero_equilibrium(equilibria: list[sp.Expr]) -> sp.Expr:
+    nonzero_equilibria = [
+        equilibrium
+        for equilibrium in equilibria
+        if sp.simplify(equilibrium) != 0
+    ]
+    if len(nonzero_equilibria) != 1:
+        raise ValueError(f"Expected one nonzero equilibrium, got {nonzero_equilibria}")
+
+    return sp.simplify(nonzero_equilibria[0])
+
+
+def equilibrium_yield_expression(positive_equilibrium: sp.Expr) -> sp.Expr:
+    return sp.simplify(e * positive_equilibrium / (1 - e))
+
+
+def analyze_yield(
+    name: str,
+    equilibrium_analysis: EquilibriumAnalysis,
+) -> YieldAnalysis:
+    positive_equilibrium = equilibrium_analysis.positive_equilibrium
+    yield_expression = equilibrium_yield_expression(positive_equilibrium)
+    yield_derivative = sp.diff(yield_expression, e)
+
+    return YieldAnalysis(
+        name=name,
+        positive_equilibrium=positive_equilibrium,
+        yield_expression=sp.simplify(yield_expression),
+        yield_derivative=sp.simplify(yield_derivative),
+        critical_efforts=sp.solve(sp.factor(yield_derivative), e),
+        admissible_maximizer=1 - 1 / sp.sqrt(r),
     )
 
 
@@ -91,20 +136,47 @@ def show_equilibrium_analysis(analysis: EquilibriumAnalysis) -> None:
     print()
 
 
+def show_yield_analysis(analysis: YieldAnalysis) -> None:
+    print(analysis.name)
+    print("=" * len(analysis.name))
+    print(f"N* = {readable_latex(analysis.positive_equilibrium)}")
+    print()
+
+    print("Equilibrium yield:")
+    print(f"Y(e) = eN*/(1-e) = {readable_latex(analysis.yield_expression)}")
+    print()
+
+    print("Yield derivative:")
+    print(f"Y'(e) = {readable_latex(analysis.yield_derivative)}")
+    print()
+
+    print("Critical efforts:")
+    for critical_effort in analysis.critical_efforts:
+        print(f"e* = {readable_latex(critical_effort)}")
+    print()
+
+    print("Admissible maximizer for 0 <= e <= 1:")
+    print(f"e* = {readable_latex(analysis.admissible_maximizer)}")
+    print()
+
+
 def main() -> None:
     base_analysis = analyze_equilibria(
         name="Beverton-Holt map",
         map_expression=beverton_holt_map(),
-        positive_equilibrium=K * (r - 1),
     )
     fishing_analysis = analyze_equilibria(
         name="Beverton-Holt map with fishing effort",
         map_expression=beverton_holt_map_with_fishing(),
-        positive_equilibrium=K * (r * (1 - e) - 1),
+    )
+    yield_analysis = analyze_yield(
+        name="Maximizing fishing yield",
+        equilibrium_analysis=fishing_analysis,
     )
 
-    show_equilibrium_analysis(base_analysis)
+    #show_equilibrium_analysis(base_analysis)
     show_equilibrium_analysis(fishing_analysis)
+    show_yield_analysis(yield_analysis)
 
 
 if __name__ == "__main__":
