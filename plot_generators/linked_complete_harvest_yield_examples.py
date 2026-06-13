@@ -103,11 +103,6 @@ def create_subplot(ax, example: dict[str, float | str]) -> None:
     )
     ax.clabel(contours, inline=True, fontsize=7, fmt="%.2f")
 
-    if edge == "A":
-        ax.axvline(1, color="red", linewidth=2.2, alpha=0.9, label=r"$e_A=1$")
-    else:
-        ax.axhline(1, color="red", linewidth=2.2, alpha=0.9, label=r"$e_B=1$")
-
     ax.scatter(
         [candidate_e_a],
         [candidate_e_b],

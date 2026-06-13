@@ -673,10 +673,10 @@ maximize total equilibrium fishing yield. In this problem the parameters
 $r_A$, $r_B$, $K_A$, $K_B$, and $m$ are fixed. The only control variables
 are $e_A$ and $e_B$.
 
-The equilibrium populations are
-determined by the equilibrium equations of
-\eqref{eq:linked-fishing-model}. For compact notation, define the
-post-growth, post-movement populations before fishing by
+For each choice of $e_A$ and $e_B$, the equilibrium populations are
+determined by \eqref{eq:linked-fishing-model}. To keep the formulas
+readable, define the post-growth, post-movement populations before
+fishing by
 \begin{equation}
     \label{eq:linked-fishing-growth-before-harvest}
     \begin{aligned}
@@ -716,45 +716,49 @@ Using the equilibrium constraints in
     \qquad
     0\leq e_A,e_B<1.
 \end{equation}
-Thus the yield maximization problem is constrained: changing $e_A$ and
-$e_B$ also changes the equilibrium populations $N_A^*$ and $N_B^*$.
-Throughout this section we restrict the fishing efforts to the unit
-square $0\leq e_A,e_B\leq1$. On this square, nonnegative populations are
-mapped to nonnegative populations, since $F_A,F_B\geq0$ and
-$1-e_A,1-e_B\geq0$. Thus the effort constraints are the main feasibility
-checks for the candidate formulas. When a boundary candidate is defined
+Notice that $N_A^*$ and $N_B^*$ depend on the efforts $e_A$ and $e_B$.
+Thus, when we maximize the yield, we should think of the equilibrium
+populations as functions of the efforts.
+Throughout this section the efforts are restricted to the unit square
+$0\leq e_A,e_B\leq1$. This is the natural range for fishing effort:
+$e_i=0$ means no fishing in patch $i$, and $e_i=1$ means that all fish
+present before fishing are removed. In this range, nonnegative
+populations stay nonnegative because $F_A,F_B\geq0$ and
+$1-e_A,1-e_B\geq0$. When a boundary candidate is defined
 implicitly by equilibrium equations, we choose the nonnegative
 equilibrium solution.
 
-Before comparing yield candidates, we first check the extinction
-criterion \eqref{eq:linked-fishing-spectral-criterion}, or equivalently
-the threshold form \eqref{eq:linked-fishing-eb-threshold}. If the
-efforts lie in the extinction region, then the equilibrium population is
-zero and the equilibrium yield is zero. Such efforts cannot give a
-positive-yield maximum, so the candidate search below is carried out in
-the persistence region.
+Before doing the yield maximization, we should first check that the
+system can persist. If the population already goes extinct without
+fishing, then there is no positive equilibrium yield to maximize. In the
+rest of this section we therefore assume that the model is in the
+persistence case, using the extinction criterion
+\eqref{eq:linked-fishing-spectral-criterion} and its threshold form
+\eqref{eq:linked-fishing-eb-threshold} as a check on candidate efforts.
 
-If $e_A=e_B=0$, there is no fishing and $Y=0$. If $e_A=e_B=1$, both
-post-fishing populations are zero at equilibrium and again $Y=0$.
-Neither corner can be a positive-yield maximum, so these two zero-yield
-corners are omitted from the candidate table.
+Two corners are immediate. If $e_A=e_B=0$, there is no fishing and the
+yield is zero. If $e_A=e_B=1$, all fish present before fishing are
+removed, so the equilibrium population is zero and the equilibrium yield
+is again zero. Neither corner can be a positive-yield maximum, so these
+two zero-yield corners are omitted from the candidate table.
 
-The remaining part of the square $0\leq e_A,e_B\leq1$ is split into
-boundary cases and the open interior. Some cases are symmetric, so we
-treat them together.
+After removing these zero-yield corners, the remaining candidates come
+from the boundary edges and from the open interior. The two populations
+play symmetric roles, so several cases can be derived in pairs.
 
 \subsubsection{Complete-Harvest Edges}
-The complete-harvest edges are $e_A=1$ and $e_B=1$. They are boundary
-cases, but they are not automatically zero-yield cases. We start with
-the edge $e_A=1$, where patch $A$ is completely harvested. Then
-$N_A^*=0$. If $e_B<1$, the remaining equilibrium equation is
+The complete-harvest edges are $e_A=1$ and $e_B=1$. We start with the
+edge $e_A=1$, where patch $A$ is completely harvested. Then $N_A^*=0$.
+If $e_B<1$, the remaining equilibrium equation is
 \begin{equation*}
     N_B^*
     =
     (1-e_B)(1-m)
     \frac{K_Br_BN_B^*}{K_B+N_B^*}.
 \end{equation*}
-For a positive remaining population, divide by $N_B^*$:
+\[
+    \Downarrow
+\]
 \begin{align*}
     1
         &=
@@ -768,16 +772,14 @@ Thus, on this edge,
 \begin{equation*}
     N_B^*=K_B\left(r_B(1-m)(1-e_B)-1\right),
 \end{equation*}
-whenever this expression is positive.
 
-Now compute the yield on the same edge. Since $N_A^*=0$, the growth in
-patch $A$ is zero. Hence
+On the same edge, $N_A^*=0$, so the growth in patch $A$ is zero:
 \begin{equation*}
     G_A(N_A^*,N_B^*)=mF_B(N_B^*),
     \qquad
     G_B(N_A^*,N_B^*)=(1-m)F_B(N_B^*).
 \end{equation*}
-Because $e_A=1$, the total yield is
+Since $e_A=1$, the yield is
 \begin{equation*}
     Y=
     G_A(N_A^*,N_B^*)+e_BG_B(N_A^*,N_B^*)
@@ -806,7 +808,7 @@ The yield becomes
         &=
         K_B\left(r_B+1-\frac{1}{cq}-r_Bcq\right).
 \end{align*}
-Therefore
+Differentiating with respect to $q$ gives
 \begin{equation*}
     \frac{dY}{dq}
     =
@@ -825,9 +827,8 @@ and the corresponding candidate yield is
     Y=K_B(\sqrt{r_B}-1)^2.
 \end{equation*}
 
-The edge $e_B=1$ is symmetric. In that case $N_B^*=0$, patch $B$ is
-completely harvested, and the same calculation with the roles of $A$
-and $B$ exchanged gives
+The edge $e_B=1$ gives the symmetric case. Now $N_B^*=0$, and exchanging
+the roles of $A$ and $B$ gives
 \begin{equation*}
     e_A^*=1-\frac{1}{(1-m)\sqrt{r_A}}.
 \end{equation*}
@@ -839,14 +840,13 @@ The corresponding candidate yield is
     \centering
     \includegraphics[width=\textwidth]{plots/linked_complete_harvest_yield_examples.pdf}
     \caption{Examples where the yield-maximizing strategy lies on a
-    complete-harvest edge. The red line marks the edge $e_A=1$ or
-    $e_B=1$, and the red point marks the corresponding analytic edge
-    candidate. The black cross marks the maximum found on the simulation
-    grid. The color background and white contours show the simulated
-    equilibrium yield over the effort square.}
+    complete-harvest edge. The red point marks the corresponding
+    analytic edge candidate. The black cross marks the maximum found on
+    the simulation grid. The color background and white contours show
+    the simulated equilibrium yield over the effort square.}
 \end{figure}
 \noindent\textbf{Complete harvest in $A$.}
-The parameters are
+For the left plot,
 $r_A=0.9274$, $r_B=4.3917$, and $m=0.1784$. The analytic edge candidate
 is
 \begin{equation*}
@@ -862,7 +862,7 @@ On the simulation grid, the largest sampled yield occurs at
 \end{equation*}
 
 \noindent\textbf{Complete harvest in $B$.}
-The parameters are
+For the right plot,
 $r_A=3.4753$, $r_B=0.4583$, and $m=0.2171$. The analytic edge candidate
 is
 \begin{equation*}
@@ -878,13 +878,13 @@ On the simulation grid, the largest sampled yield occurs at
 \end{equation*}
 
 \subsubsection{No-Take Edges}
-The no-take edges are $e_A=0$ and $e_B=0$. These are different from the
-complete-harvest edges: here one patch is protected from fishing, while
-the other patch may still be harvested. Direct symbolic elimination in
-the population variables gives a degree-six polynomial, so the result is
-not pleasant to use in that form. A cleaner form is obtained by changing
-variables from the equilibrium populations to the local growth
-derivatives
+The no-take edges are $e_A=0$ and $e_B=0$. Here one patch is protected
+from fishing, while the other patch may still be harvested. Direct
+symbolic elimination in the population variables gives a degree-six
+polynomial. This polynomial is an algebraic abomination: it is possible
+to write down, but horrible to use and not helpful for understanding the
+solution. Instead, we change variables from the equilibrium populations
+to the local growth derivatives
 \begin{equation*}
     \begin{aligned}
         a&=\sqrt{r_A},
@@ -898,9 +898,9 @@ derivatives
         q_B&=F_B'(N_B^*).
     \end{aligned}
 \end{equation*}
-The quantities $q_A$ and $q_B$ are the marginal, or local, growth
-derivatives at the equilibrium populations. They measure the local slope
-of the Beverton-Holt growth functions at the candidate equilibrium.
+The quantities $q_A$ and $q_B$ are the local growth derivatives at the
+candidate equilibrium. In other words, they are the slopes of the two
+Beverton--Holt growth functions at $N_A^*$ and $N_B^*$.
 
 For the Beverton-Holt map,
 \begin{equation*}
@@ -921,8 +921,8 @@ corresponding expression for $N_B^*$. Thus this change of variables gives
     \qquad
     N_B^*=K_B\frac{b-y}{y},
 \end{equation}
-Substituting these expressions back into the Beverton-Holt growth
-functions gives
+Substituting these expressions into the Beverton--Holt growth functions
+gives
 \begin{equation*}
     F_A(N_A^*)=K_Aa(a-x),
     \qquad
@@ -935,8 +935,8 @@ $Y=e_BG_B(N_A^*,N_B^*)$, and the equilibrium constraints are
     \qquad
     N_B^*=(1-e_B)G_B(N_A^*,N_B^*).
 \end{equation*}
-Introduce Lagrange multipliers for these two constraints. On this edge
-the variables are $N_A$, $N_B$, and $e_B$, so we use the Lagrangian
+There are two constraints, so introduce two Lagrange multipliers. On
+this edge the variables are $N_A$, $N_B$, and $e_B$, and the Lagrangian is
 \begin{equation*}
     \begin{aligned}
     \mathcal{L}
@@ -945,8 +945,8 @@ the variables are $N_A$, $N_B$, and $e_B$, so we use the Lagrangian
     &+\lambda_B\left(N_B-(1-e_B)G_B(N_A,N_B)\right).
     \end{aligned}
 \end{equation*}
-All derivatives below are evaluated at the candidate equilibrium. The
-derivative with respect to $e_B$ is
+All derivatives in this calculation are evaluated at the candidate
+equilibrium. The derivative with respect to $e_B$ is
 \begin{equation*}
     \frac{\partial\mathcal{L}}{\partial e_B}
     =
@@ -954,8 +954,8 @@ derivative with respect to $e_B$ is
     =
     (1+\lambda_B)G_B.
 \end{equation*}
-For a positive-yield candidate, $G_B>0$, so this gives
-$\lambda_B=-1$. The derivative with respect to $N_A$ then gives
+For a positive-yield candidate $G_B>0$, and therefore $\lambda_B=-1$.
+The derivative with respect to $N_A$ then gives
 \begin{equation*}
     \lambda_A
     =
@@ -965,8 +965,8 @@ Finally, the derivative with respect to $N_B$ gives
 \begin{equation*}
     (1-m)q_B-mq_B\lambda_A-1=0.
 \end{equation*}
-Substituting the expression for $\lambda_A$ into this last equation and
-clearing the denominator gives
+Substitute the expression for $\lambda_A$ into this last equation and
+clear the denominator:
 \begin{equation*}
     (1-m)(q_A+q_B)+(2m-1)q_Aq_B=1.
 \end{equation*}
@@ -976,13 +976,13 @@ the single relation
     \label{eq:no-take-stationarity-curve}
     (1-m)(x^2+y^2)+(2m-1)x^2y^2=1.
 \end{equation}
-This is the curve shown in orange in Figure~\ref{fig:no-take-yield-examples}. It is the set of effort pairs for
-which the no-take first-order condition is satisfied after changing from
-population variables to local growth-derivative variables.
+This is the curve shown in orange in Figure~\ref{fig:no-take-yield-examples}.
+It contains the no-take candidates that satisfy the first-order condition
+after the change from population variables to local derivative variables.
 
 Equation \eqref{eq:no-take-stationarity-curve} can be solved explicitly
-for one derivative variable in terms of the other. To work on the edge
-$e_A=0$, solving it for $y$ gives
+for one derivative variable in terms of the other. On the edge $e_A=0$,
+solving it for $y$ gives
 \begin{equation*}
     y_A(x)
     =
@@ -991,27 +991,27 @@ $e_A=0$, solving it for $y$ gives
              {1-m+(2m-1)x^2}
     }.
 \end{equation*}
-This only says which pairs $(x,y)$ satisfy the no-take stationarity
-condition. It does not yet tell us which value of $x$ gives an actual
-equilibrium. Since $e_A=0$, patch $A$ is not harvested, so its
-equilibrium equation is
+This curve gives the first-order condition, but not the equilibrium
+itself. We still need to find which value of $x$ also satisfies the
+protected patch equilibrium equation. Since $e_A=0$, patch $A$ is not
+harvested, so its equilibrium equation is
 \begin{equation*}
     N_A^*=(1-m)F_A(N_A^*)+mF_B(N_B^*).
 \end{equation*}
-Now use the derivative variables. The left side is
-$N_A^*=K_A(a-x)/x$, while the two growth terms are
+In derivative variables, the left side is
+$N_A^*=K_A(a-x)/x$, and the growth terms are
 $F_A(N_A^*)=K_Aa(a-x)$ and
-$F_B(N_B^*)=K_Bb(b-y)$. Finally, on the stationarity curve we have
-$y=y_A(x)$. Substituting these four expressions into the patch $A$
-equilibrium equation gives the scalar equation
+$F_B(N_B^*)=K_Bb(b-y)$. On the stationarity curve, $y=y_A(x)$.
+Substituting these expressions into the patch $A$ equilibrium equation
+gives the scalar equation
 \begin{equation}
     \label{eq:no-take-a-scalar-root}
     K_A\frac{a-x}{x}
     =
     (1-m)K_Aa(a-x)+mK_Bb\bigl(b-y_A(x)\bigr).
 \end{equation}
-After this equation is solved for $x$, set $y=y_A(x)$. The effort in
-patch $B$ is recovered from the patch $B$ equilibrium constraint,
+After solving this equation for $x$, set $y=y_A(x)$. The effort in patch
+$B$ comes from the patch $B$ equilibrium constraint,
 \begin{equation*}
     N_B^*=(1-e_B)G_B(N_A^*,N_B^*).
 \end{equation*}
@@ -1030,16 +1030,17 @@ and
     mK_Aa(a-x)+(1-m)K_Bb(b-y).
 \end{equation*}
 Therefore
-\begin{equation*}
+\begin{equation}
+    \label{eq:no-take-a-effort-recovery}
     e_B^*
     =
     1-
     \frac{K_B(b-y)/y}
          {mK_Aa(a-x)+(1-m)K_Bb(b-y)}.
-\end{equation*}
-Together with the effort-recovery formula, the root of
-\eqref{eq:no-take-a-scalar-root} gives a no-take-in-$A$ edge candidate
-when $0<e_B^*<1$.
+\end{equation}
+Thus, a root of \eqref{eq:no-take-a-scalar-root}, together with the
+effort recovery formula \eqref{eq:no-take-a-effort-recovery}, gives a
+no-take-in-$A$ edge candidate.
 
 The edge $e_B=0$ is symmetric. Solving
 \eqref{eq:no-take-stationarity-curve} for $x$ gives
@@ -1060,23 +1061,24 @@ Then the protected patch $B$ equilibrium equation becomes
 \end{equation}
 After solving \eqref{eq:no-take-b-scalar-root} for $y$, set
 $x=x_B(y)$ and recover the effort in patch $A$:
-\begin{equation*}
+\begin{equation}
+    \label{eq:no-take-b-effort-recovery}
     e_A^*
     =
     1-
     \frac{K_A(a-x)/x}
          {(1-m)K_Aa(a-x)+mK_Bb(b-y)}.
-\end{equation*}
-Together with the effort-recovery formula, the root of
-\eqref{eq:no-take-b-scalar-root} gives the symmetric no-take-in-$B$ edge
-candidate when $0<e_A^*<1$.
+\end{equation}
+Thus, a root of \eqref{eq:no-take-b-scalar-root}, together with the
+effort recovery formula \eqref{eq:no-take-b-effort-recovery}, gives the
+symmetric no-take-in-$B$ edge candidate.
 
 In the examples below, the scalar equations
 \eqref{eq:no-take-a-scalar-root} and \eqref{eq:no-take-b-scalar-root}
-are solved numerically using Brent's method. Thus the change of variables
-reduces each no-take case to a one-dimensional root-finding problem,
-even though it does not produce a short closed-form expression for the
-no-take effort.
+are solved numerically using Brent's method. The important point is that
+the change of variables reduces each no-take case to a one-dimensional
+root-finding problem, even though it does not give a short closed-form
+formula for the effort.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{plots/linked_no_take_yield_examples.pdf}
@@ -1089,7 +1091,7 @@ no-take effort.
     \label{fig:no-take-yield-examples}
 \end{figure}
 \noindent\textbf{No take in $A$.}
-The parameters are $r_A=1.8685$,
+For the left plot, $r_A=1.8685$,
 $r_B=1.0365$, and $m=0.7586$. The analytic edge candidate is
 \begin{equation*}
     (e_A^*,e_B^*)=(0.0000,0.3255),
@@ -1104,7 +1106,7 @@ On the simulation grid, the largest sampled yield occurs at
 \end{equation*}
 
 \noindent\textbf{No take in $B$.}
-The parameters are $r_A=0.8367$,
+For the right plot, $r_A=0.8367$,
 $r_B=2.7031$, and $m=0.9817$. The analytic edge candidate is
 \begin{equation*}
     (e_A^*,e_B^*)=(0.3413,0.0000),
@@ -1119,10 +1121,9 @@ On the simulation grid, the largest sampled yield occurs at
 \end{equation*}
 
 \subsubsection{Interior Candidates}
-We now consider candidates with $0<e_A<1$ and $0<e_B<1$. In the
-interior, both effort variables are free to vary, so we use the
-Lagrange multiplier method with the two equilibrium constraints. The
-Lagrangian is
+Now consider candidates with $0<e_A<1$ and $0<e_B<1$. In the interior,
+both effort variables can vary, so we use Lagrange multipliers with the
+two equilibrium constraints. The Lagrangian is
 \begin{equation}
     \label{eq:linked-fishing-yield-lagrangian}
     \begin{aligned}
@@ -1148,19 +1149,16 @@ An interior optimum must satisfy
     \frac{\partial\mathcal{L}}{\partial e_B}=0,
 \end{equation*}
 together with the two equilibrium constraints in
-\eqref{eq:linked-fishing-yield-constraints}. The equilibrium constraints
-select the feasible surface. The derivative equations above then say
-that, along this feasible surface, the yield has no first-order increase
-in any interior direction.
+\eqref{eq:linked-fishing-yield-constraints}.
 
-The effort derivatives simplify first. At equilibrium,
+Start with the effort derivatives. At equilibrium,
 \begin{equation*}
     G_A(N_A^*,N_B^*)=\frac{N_A^*}{1-e_A},
     \qquad
     G_B(N_A^*,N_B^*)=\frac{N_B^*}{1-e_B},
 \end{equation*}
-so the effort equations determine the multipliers. For example, the
-terms in $\mathcal{L}$ that depend on $e_A$ are
+so the effort equations determine the multipliers. For $e_A$, the
+relevant terms in $\mathcal{L}$ are
 \begin{equation*}
     \frac{e_A N_A^*}{1-e_A}
     +
@@ -1175,7 +1173,7 @@ Therefore
     +
     \lambda_A G_A(N_A^*,N_B^*).
 \end{equation*}
-Using $G_A(N_A^*,N_B^*)=N_A^*/(1-e_A)$ and setting the derivative to
+Using $G_A(N_A^*,N_B^*)=N_A^*/(1-e_A)$ and setting this derivative to
 zero gives $\lambda_A=-1/(1-e_A)$. The same calculation for patch $B$
 gives
 \begin{equation*}
@@ -1183,7 +1181,7 @@ gives
     \qquad
     \lambda_B=-\frac{1}{1-e_B}.
 \end{equation*}
-Substituting these into the population derivatives gives
+Substitute these into the population derivatives:
 \begin{align*}
     0
         &=
@@ -1198,8 +1196,7 @@ Substituting these into the population derivatives gives
         &=
         -1+F_A'(N_A^*).
 \end{align*}
-Therefore $F_A'(N_A^*)=1$. The same calculation for population $B$
-gives $F_B'(N_B^*)=1$. Thus,
+Therefore $F_A'(N_A^*)=1$. By symmetry, $F_B'(N_B^*)=1$. Thus,
 \begin{equation*}
     F_A'(N_A^*)=1,
     \qquad
@@ -1217,8 +1214,8 @@ the interior candidate has
     \qquad
     N_B^*=K_B(\sqrt{r_B}-1).
 \end{equation*}
-At this point we know the candidate equilibrium populations. The
-corresponding efforts are then determined by the equilibrium constraints.
+At this point the candidate populations are known. The corresponding
+efforts come from the equilibrium constraints.
 First evaluate the pre-fishing, post-movement quantities $G_A$ and
 $G_B$ at the candidate populations. Since
 \begin{equation*}
@@ -1244,25 +1241,22 @@ we define
             +(1-m)K_B\sqrt{r_B}(\sqrt{r_B}-1).
     \end{aligned}
 \end{equation*}
-Here $G_A^*$ is the amount present in patch $A$ after growth and
-movement but before fishing, and $G_B^*$ is the corresponding amount in
-patch $B$. The equilibrium constraints require
+Here $G_A^*$ and $G_B^*$ are the amounts present after growth and
+movement, but before fishing. The equilibrium constraints require
 \begin{equation*}
     N_A^*=(1-e_A^*)G_A^*,
     \qquad
     N_B^*=(1-e_B^*)G_B^*.
 \end{equation*}
-Solving these two equations for the efforts gives
+Solving for the efforts gives
 \begin{equation*}
     e_A^*=1-\frac{K_A(\sqrt{r_A}-1)}{G_A^*},
     \qquad
     e_B^*=1-\frac{K_B(\sqrt{r_B}-1)}{G_B^*}.
 \end{equation*}
-This is an interior candidate only when the computed efforts satisfy
-$0<e_A^*,e_B^*<1$. When this holds, the candidate must be compared with
-the boundary candidates above. The extinction boundary does not give a
-positive yield maximum, because at extinction the equilibrium
-population, and therefore the equilibrium yield, is zero.
+This is an interior candidate only when the computed efforts lie inside
+the unit square. When this happens, it must be compared with the boundary
+candidates above.
 
 \begin{figure}[H]
     \centering
@@ -1274,46 +1268,44 @@ population, and therefore the equilibrium yield, is zero.
     interior candidate, while the black cross marks the maximum found on
     the simulation grid.}
 \end{figure}
-For this parameter set, the analytic interior candidate is
+For this parameter set, the analytic interior candidate gives
 \begin{equation*}
     e_A^*\approx0.1186,
     \qquad
     e_B^*\approx0.4556.
 \end{equation*}
-On the simulation grid, which uses spacing $0.01$, the largest sampled
-yield occurs at
+The simulation grid uses spacing $0.01$. Its largest sampled yield occurs at
 \begin{equation*}
     e_A=0.1200,
     \qquad
     e_B=0.4500.
 \end{equation*}
-These points are very close; the small difference is caused by the
-finite grid resolution.
+The two points are close; the small difference comes from the finite grid
+resolution.
 
 \subsubsection{Protected Source and Harvested Sink}
-One interesting endpoint is the strategy of closing fishing in one patch
-and harvesting the other patch as much as possible. In this situation,
+One interesting endpoint is to close fishing in one patch and harvest the
+other patch as much as possible. In this situation,
 the protected patch acts as a source population, while movement carries
-part of its production into the harvested patch. The three candidate
-families above recover this case naturally.
+part of its production into the harvested patch. The candidate families
+above recover this case automatically.
 
 \noindent\textbf{Case $(e_A,e_B)=(0,1)$: protect $A$, harvest $B$.}
 On the edge $e_B=1$, the complete-harvest-in-$B$ candidate is
 \begin{equation*}
     e_A^*=1-\frac{1}{(1-m)\sqrt{r_A}}.
 \end{equation*}
-Therefore the candidate lands at the corner $e_A=0$, $e_B=1$ exactly
-when
+This candidate reaches the corner $e_A=0$, $e_B=1$ exactly when
 \begin{equation*}
     (1-m)\sqrt{r_A}=1.
 \end{equation*}
-Thus the maximum can occur at the policy
+At that parameter value, the candidate policy is
 \begin{equation*}
     e_A=0,
     \qquad
     e_B=1,
 \end{equation*}
-meaning no fishing in patch $A$ and complete harvesting in patch $B$. At
+This means no fishing in patch $A$ and complete harvesting in patch $B$. At
 this endpoint,
 \begin{equation*}
     N_B^*=0,
@@ -1337,12 +1329,11 @@ condition holds and the endpoint candidate is
 \end{equation*}
 
 \noindent\textbf{Case $(e_A,e_B)=(1,0)$: protect $B$, harvest $A$.}
-The symmetric endpoint starts from the edge $e_A=1$. The
-complete-harvest-in-$A$ candidate is
+The symmetric endpoint starts from the edge $e_A=1$:
 \begin{equation*}
     e_B^*=1-\frac{1}{(1-m)\sqrt{r_B}},
 \end{equation*}
-so it lands at $e_A=1$, $e_B=0$ when
+so it reaches the corner $e_A=1$, $e_B=0$ when
 \begin{equation*}
     (1-m)\sqrt{r_B}=1.
 \end{equation*}
@@ -1362,7 +1353,7 @@ For $m=0.3$, this gives
 \begin{equation*}
     r_B=\frac{1}{(1-0.3)^2}\approx2.0408.
 \end{equation*}
-With $K_A=K_B=1$ and $r_A=0.8$, the endpoint candidate is
+With $K_A=K_B=1$ and $r_A=0.8$, this gives
 \begin{equation*}
     (e_A^*,e_B^*)=(1,0),
     \qquad
@@ -1383,19 +1374,18 @@ With $K_A=K_B=1$ and $r_A=0.8$, the endpoint candidate is
 
 \subsubsection{Candidate Summary}
 After the extinction criterion has been checked, the preceding cases
-give a finite list of positive-yield candidate maximizers. The global
-maximum is found by evaluating every valid candidate and choosing the
-one with largest yield. A candidate is valid only when all formulas are
-real and computable, the recovered populations are nonnegative, and the
-computed efforts lie in the unit square $0\leq e_A,e_B\leq1$, including
-the boundary required by that case.
+leave a finite list of positive-yield candidates. To find the global
+maximum, evaluate every valid candidate and choose the one with the
+largest yield. Here valid means that the formulas are computable over
+the real numbers and that the computed efforts lie in the unit square
+$0\leq e_A,e_B\leq1$, including the boundary required by that case.
 
-For the no-take candidates, the scalar equations do not directly give
-the populations. The procedure is: solve
-\eqref{eq:no-take-a-scalar-root} or \eqref{eq:no-take-b-scalar-root}
-for the derivative variable, recover the other derivative variable from
-\eqref{eq:no-take-stationarity-curve}, and then recover
-$N_A^*$ and $N_B^*$ from \eqref{eq:no-take-population-recovery}.
+For the no-take candidates, the scalar equations first give the
+derivative variables, not the populations. The procedure is: solve
+\eqref{eq:no-take-a-scalar-root} or \eqref{eq:no-take-b-scalar-root},
+recover the other derivative variable from
+\eqref{eq:no-take-stationarity-curve}, and then recover $N_A^*$ and
+$N_B^*$ from \eqref{eq:no-take-population-recovery}.
 
 \begin{table}[H]
     \centering
@@ -1434,20 +1424,19 @@ $N_A^*$ and $N_B^*$ from \eqref{eq:no-take-population-recovery}.
     \end{tabular}
     }
     \caption{Candidate yield maximizers for the linked fishing model.
-    Each valid candidate must be compared with all other valid
-    candidates.}
+    The largest yield among the valid candidates gives the global maximum.}
 \end{table}
 
 \subsubsection{Possible Extension: Optimizing Connectivity}
-In this paper the movement parameter $m$ is treated as fixed. In some
-real-world settings, however, management can also influence connectivity:
-for example, by opening or closing migration corridors, changing habitat
-quality between regions, or modifying barriers that affect movement.
+In this paper the movement parameter $m$ is fixed. In some real-world
+settings, management may also influence connectivity: for example, by
+opening or closing migration corridors, changing habitat quality between
+regions, or modifying barriers that affect movement.
 Then the yield maximization problem would have three decision variables,
 \begin{equation*}
     e_A,\qquad e_B,\qquad m.
 \end{equation*}
-The same general method could be applied: write the equilibrium
+The same general method could still be used: write the equilibrium
 constraints, form the constrained yield problem, and compare interior and
 boundary candidates. This extension is outside the scope of the present
 paper, where the goal is to understand the effect of fishing efforts for
