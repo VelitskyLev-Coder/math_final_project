@@ -1,5 +1,5 @@
 TEX_DIR := tex
-TEX_MAIN := main.tex
+TEX_MAIN := linked_beverton_holt_fishing.tex
 PDFLATEX := pdflatex
 PYTHON := ./.venv/Scripts/python.exe
 FISHING_PLOT := $(TEX_DIR)/plots/fishing_equilibrium_r1_4_k1.pdf
