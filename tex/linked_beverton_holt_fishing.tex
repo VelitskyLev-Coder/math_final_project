@@ -1,28 +1,83 @@
 \documentclass{article}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{subcaption}
 \usepackage{array}
 \usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
 \numberwithin{equation}{section}
-\setlength{\parindent}{15pt}
+\setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
-\title{Linked Beverton--Holt Populations with Fishing:\\ Extinction and Yield Optimization}
+\title{Beverton--Holt Model for Populations on Patches with Harvesting:\\ Preventing Extinction and Optimizing Yield}
 \author{}
 \date{\today}
 \begin{document}
 \maketitle
-\section{Beverton-Holt model}
-Let $N_t \geq 0$ denote the population at time $t$. We use the
-scaled Beverton-Holt model
+\begin{abstract}
+This paper studies Beverton--Holt population dynamics on one patch and
+on two linked patches, with harvesting represented by fishing effort.
+For the single-population model, we derive the equilibria, the
+extinction criterion, and the effort that maximizes sustainable yield.
+For two linked patches, dispersal makes the fate of each patch depend
+on the other patch, so extinction and optimal harvesting must be
+studied as properties of the coupled system. We derive extinction
+criteria from the linearization at the
+extinction equilibrium and use the spectral radius to describe when the
+linked population can persist. We then formulate the yield-maximization
+problem for the linked model with fishing. A change from effort
+variables to equilibrium population variables makes the problem
+convex, so the Karush--Kuhn--Tucker conditions give global optimality
+certificates. This leads to several possible maximizing strategies:
+an interior fishing strategy, complete harvest in one patch, protection
+of a source patch while harvesting a sink patch, and no-take marine
+reserve boundaries. Numerical plots are used throughout to compare the
+analytic conditions with simulated dynamics and to show how the optimal
+strategy changes with the model parameters.
+\end{abstract}
+\section{The Single Population}
+\subsection{Beverton--Holt Model}
+We model the population with the Beverton--Holt map. This model was
+introduced by Beverton and Holt in their study of exploited fish
+populations \cite{beverton-holt-1957}. Let $N_t \geq 0$ denote the
+population at time $t$. One intuitive way to write the model is
+\begin{equation*}
+    N_{t+1}
+    = \frac{rN_t}{1+\frac{r-1}{K_{\mathrm{eq}}}N_t}.
+\end{equation*}
+Here $r$ controls the growth of a very small population, and
+$K_{\mathrm{eq}}$ is the positive equilibrium when $r>1$.
+Throughout this paper we use the more convenient form obtained by the
+change of variables
+\begin{equation*}
+    K=\frac{K_{\mathrm{eq}}}{r-1}.
+\end{equation*}
+This gives the equivalent form
 \begin{equation}
     \label{eq:bh-map}
     N_{t+1} = F(N_t)
             = \frac{K r N_t}{K + N_t},
 \end{equation}
-where $r \geq 0$ is the growth parameter and $K>0$ is the
-population-scale parameter.
+which is algebraically simpler in the later sections. In this
+parametrization $K$ is the equilibrium scale scaled by a factor of
+$1/(r-1)$.
+The low-density meaning of $r$ is unchanged: since $F'(0)=r$, a very
+small population is multiplied approximately by $r$ in one time step.\\
+A cobweb plot gives a geometric picture of the iteration. Starting from
+$N_t$, we apply the function by moving vertically to the point
+$(N_t,F(N_t))$. The height of this point is the next population value,
+$N_{t+1}$. To use it as the next input, we move horizontally to the
+diagonal $N_{t+1}=N_t$, where the same number is read on the horizontal
+axis. Repeating these vertical and horizontal moves shows how the
+sequence approaches an equilibrium.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{plots/beverton_holt_cobweb_r1_4_k1.pdf}
+    \caption{Cobweb plot for the Beverton--Holt map \eqref{eq:bh-map}
+    with $r=1.4$ and $K=1$. Starting from a small population, the
+    iteration moves toward the positive equilibrium $N^*=K(r-1)$. The
+    inset zooms in near the equilibrium.}
+\end{figure}
 \subsection{Equilibria}
 An equilibrium $N^*$ satisfies $F(N^*)=N^*$. Using \eqref{eq:bh-map},
 this means
@@ -39,7 +94,7 @@ For a positive equilibrium, $N^*>0$, we divide by $N^*$ and obtain
     K+N^* &= Kr,\\
     N^* &= K(r-1).
 \end{align*}
-The positive equilibrium exists only when $r>1$ and the population can
+The positive equilibrium exists only when $r>1$ since the population can
 not be negative. Thus,
 \begin{equation*}
     \begin{cases}
@@ -48,6 +103,70 @@ not be negative. Thus,
     \end{cases}
 \end{equation*}
 \subsection{Stability}
+Stability describes what happens after a small perturbation. If the
+population starts close to an equilibrium and stays close, the
+equilibrium is stable. If the population also returns to the equilibrium
+as time goes on, the equilibrium is asymptotically stable.
+
+Formally, for a discrete map $N_{t+1}=F(N_t)$, an equilibrium $N^*$ is
+stable if for every $\varepsilon>0$ there exists $\delta>0$ such that
+\begin{equation*}
+    |N_0-N^*|<\delta
+    \quad \Longrightarrow \quad
+    |N_t-N^*|<\varepsilon
+    \quad \text{for all } t\geq 0.
+\end{equation*}
+It is locally asymptotically stable if, in addition, all sufficiently
+nearby initial populations converge to $N^*$:
+\begin{equation*}
+    |N_0-N^*|<\delta
+    \quad \Longrightarrow \quad
+    \lim_{t\to\infty}N_t=N^*.
+\end{equation*}
+For the one-dimensional maps used in this paper, stability can be
+checked from the derivative. If $F$ is continuously differentiable near
+an equilibrium $N^*$ and
+\begin{equation*}
+    |F'(N^*)|<1,
+\end{equation*}
+then $N^*$ is locally asymptotically stable. If $|F'(N^*)|>1$, then
+$N^*$ is unstable. The case $|F'(N^*)|=1$ must be checked separately.
+This is a special case of the Banach fixed-point theorem
+\cite[pp.~7--22]{kinderlehrer-stampacchia-1980}. To avoid using this
+heavier theorem, we prove the one-dimensional stable case directly.
+Choose a number $q$ such that
+\begin{equation*}
+    |F'(N^*)|<q<1.
+\end{equation*}
+Since $F'$ is continuous, there is a small interval around $N^*$ where
+$|F'(N)|\leq q$. For $N$ in this interval, the mean value theorem gives
+\begin{equation*}
+    |F(N)-F(N^*)|\leq q|N-N^*|.
+\end{equation*}
+Because $F(N^*)=N^*$, this becomes
+\begin{equation}
+    \label{eq:local-contraction}
+    |F(N)-N^*|\leq q|N-N^*|.
+\end{equation}
+Now apply this estimate to the iterates. First,
+\begin{equation*}
+    |N_1-N^*|
+    = |F(N_0)-N^*|
+    \leq q|N_0-N^*|.
+\end{equation*}
+Then, using the same estimate again,
+\begin{equation*}
+    |N_2-N^*|
+    = |F(N_1)-N^*|
+    \leq q|N_1-N^*|
+    \leq q^2|N_0-N^*|.
+\end{equation*}
+Repeating this argument gives
+\begin{equation*}
+    |N_t-N^*|\leq q^t|N_0-N^*|.
+\end{equation*}
+Since $0<q<1$, we have $q^t\to 0$, and therefore $N_t\to N^*$.
+
 The derivative of the population map \eqref{eq:bh-map} is
 \begin{equation*}
     F'(N)=\frac{K^2r}{(K+N)^2}.
@@ -57,19 +176,30 @@ At the extinction equilibrium,
     F'(0)=r.
 \end{equation*}
 This derivative measures the growth of a very small population. Thus,
-the extinction criterion for the model without fishing is
+for $r<1$, extinction is locally asymptotically stable by the derivative
+test. For $r>1$, extinction is unstable. The threshold case $r=1$ is not
+decided by the derivative test, but it can be checked directly:
+\begin{equation*}
+    F(N)
+    =\frac{KN}{K+N}
+    =N\frac{K}{K+N}
+    <N
+    \quad \text{for every } N>0.
+\end{equation*}
+Thus positive populations decrease. Since the sequence is nonnegative,
+it has a limit $L\geq 0$. By continuity, this limit must satisfy
+$F(L)=L$. At $r=1$, the only nonnegative equilibrium is $L=0$, so
+positive populations decrease toward extinction. The extinction
+criterion for the model without fishing is therefore
 \begin{equation*}
     r \leq 1.
 \end{equation*}
-When $0\leq r<1$, extinction is locally stable. When $r>1$, extinction
-is unstable and a positive population can persist. The case $r=1$ is
-the threshold case.
 At the positive equilibrium,
 \begin{equation*}
     F'\bigl(K(r-1)\bigr)=\frac{1}{r}.
 \end{equation*}
 Consequently, whenever the positive equilibrium exists, $r>1$, it is
-locally stable.
+locally asymptotically stable.
 \section{Introduction of Fishing Effort}
 We now introduce a fishing effort parameter $e$, where
 \begin{equation*}
@@ -140,6 +270,19 @@ is less than $1$, so the positive equilibrium is locally stable.
     \eqref{eq:fishing-extinction-effort}.}
 \end{figure}
 \subsection{Maximizing Fishing Yield}
+From a management point of view, survival alone is not the only
+question. Once fishing is allowed, there is a natural pressure to ask how
+much can be taken now while still leaving enough population for the same
+process to continue in the future. This is the
+optimization problem behind maximum sustainable yield.
+
+Fishing effort has two competing effects. Increasing $e$ means removing
+a larger fraction of the population after reproduction, but it also
+lowers the equilibrium population that remains for future time steps.
+Thus very small effort gives little harvest, while very large effort can
+push the system to extinction. This suggests that an intermediate effort
+may maximize the long-term yield.
+
 We define the equilibrium fishing yield as the amount removed by fishing
 at equilibrium. Since fishing removes the fraction $e$ after
 reproduction, the yield is
@@ -188,19 +331,20 @@ $e^*\approx 0.155$, while the extinction threshold from
     \eqref{eq:fishing-extinction-effort}.}
 \end{figure}
 \section{Linked Two-Population Model}
-We now introduce two linked populations, denoted by $A$ and $B$. The
-population sizes at time $t$ are $N_A(t)$ and $N_B(t)$. Population $A$
-has parameters $r_A$ and $K_A$, while population $B$ has parameters
-$r_B$ and $K_B$.
+We now introduce two linked patches, denoted by $A$ and $B$. The
+population sizes in these patches at time $t$ are $N_A(t)$ and
+$N_B(t)$. Since the patches may have different local growth conditions,
+we use patch-specific parameters: patch $A$ has parameters $r_A$ and
+$K_A$, while patch $B$ has parameters $r_B$ and $K_B$.
 The local Beverton-Holt growth functions are
 \begin{equation*}
     F_A(N_A)=\frac{K_A r_A N_A}{K_A+N_A},
     \qquad
     F_B(N_B)=\frac{K_B r_B N_B}{K_B+N_B}.
 \end{equation*}
-The parameter $m$ controls symmetric movement between the two
-populations. A fraction $m$ of the post-growth population moves to the
-other population, while a fraction $1-m$ remains in the same population.
+The parameter $m$ controls symmetric movement, or dispersal, between the
+two patches. A fraction $m$ of the post-growth population moves to the
+other patch, while a fraction $1-m$ remains in the same patch.
 Thus, for $0\leq m\leq 1$, the linked model without fishing is
 \begin{equation}
     \label{eq:linked-model}
@@ -241,10 +385,10 @@ equilibrium is simply
 \end{equation*}
 when $r_A>1$ and $r_B>1$.
 \subsection{Connect or Not to Connect}
-A natural question is whether connecting two populations helps or hurts
-the total equilibrium population. One might expect movement to only
+A natural question is whether dispersal between two patches helps or hurts
+the total equilibrium population. One might expect dispersal to only
 redistribute the same total population between the two locations.
-However, movement can change the total equilibrium size.
+However, dispersal can change the total equilibrium size.
 
 This subsection reproduces an effect from \textbf{[paper
 placeholder]}. %TODO REPLACE palceholder
@@ -257,7 +401,7 @@ Consider the symmetric scale case
     \qquad
     r_B=1.2.
 \end{equation*}
-Without connection, $m=0$, the two populations are independent, so
+Without dispersal, $m=0$, the two populations are independent, so
 \begin{equation*}
     N_A^*=r_A-1=0.8,
     \qquad
@@ -267,7 +411,7 @@ Thus the total equilibrium population is
 \begin{equation*}
     N_A^*+N_B^*=1.0.
 \end{equation*}
-If we connect the populations with $m=0.2$, numerical solution of the
+If we allow dispersal with $m=0.2$, numerical solution of the
 coupled equilibrium equations gives approximately
 \begin{equation*}
     N_A^*\approx0.6259,
@@ -278,14 +422,14 @@ Therefore,
 \begin{equation*}
     N_A^*+N_B^*\approx1.0507.
 \end{equation*}
-In this example, connection increases the total equilibrium population.
+In this example, dispersal increases the total equilibrium population.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{plots/linked_connection_effect_ra1_8_rb1_2.pdf}
     \caption{Equilibrium populations as the movement rate $m$ varies for
     $K_A=K_B=1$, $r_A=1.8$, and $r_B=1.2$. The dashed horizontal line is
     the total equilibrium population when $m=0$. For small positive
-    movement rates, the total equilibrium rises above the no-connection
+    dispersal rates, the total equilibrium rises above the no-dispersal
     value.}
 \end{figure}
 \subsection{Exact Algebraic Form}
@@ -343,7 +487,7 @@ closed form. In practice, the cubic formula is too long to be useful, so
 we treat \eqref{eq:linked-equilibrium-cubic} and
 \eqref{eq:linked-equilibrium-nb-from-na} as the exact algebraic
 description. The biologically meaningful equilibrium is the root giving
-$N_A^*>0$ and $N_B^*>0$.
+$N_A^*>0$ and $N_B^*>0$, if such a root exists.
 \subsection{Extinction Without Fishing}
 To study extinction, we linearize the linked model \eqref{eq:linked-model}
 at the extinction equilibrium $(0,0)$. For population $A$, the local
@@ -403,8 +547,13 @@ where
         r_Am & r_B(1-m)
     \end{pmatrix}.
 \end{equation}
-The extinction equilibrium is locally stable when the spectral radius
-of the matrix in \eqref{eq:linked-linear-matrix} satisfies
+For a multidimensional discrete map, the derivative test is replaced by
+the eigenvalue test for the Jacobian matrix: the equilibrium is locally
+asymptotically stable when all eigenvalues of the linearization have
+absolute value less than $1$. A full proof of this stability criterion
+can be found in Elaydi \cite{elaydi-2005-stability}. Therefore, the
+extinction equilibrium is locally stable when the spectral radius of the
+matrix in \eqref{eq:linked-linear-matrix} satisfies
 \begin{equation}
     \label{eq:linked-spectral-criterion}
     \rho(M)<1.
@@ -561,7 +710,7 @@ where
         D &= r_B - mr_B - r_Ar_B + 2mr_Br_A.
     \end{aligned}
 \end{equation*}
-The threshold curve is obtained from the undivided boundary
+The threshold curve is obtained from the boundary
 \begin{equation}
     \label{eq:linked-fishing-det-condition}
     (Ce_A+D)e_B-(Ae_A+B)\geq0.
@@ -577,7 +726,7 @@ $0\leq e_A,e_B\leq1$, we write both parts:
     Ce_A+D>0.
 \end{equation}
 The second condition does not describe another extinction mechanism. It
-only restricts the threshold inequality to the side of the vertical line
+only restricts the threshold inequality to one side of the vertical line
 $Ce_A+D=0$ where division by $Ce_A+D$ gives the correct extinction
 branch. This gives the expected direction: larger fishing effort $e_B$
 pushes the system toward extinction. The final extinction region is the
@@ -598,7 +747,7 @@ $-r_A(1-2m)(1-e_A)$ is nonnegative. Therefore
 and hence $Ce_A+D>0$ for every $0\leq e_A\leq1$. In this case the
 branch condition is automatic on the whole unit square.
 
-If $0\leq m<1/2$, the vertical line $Ce_A+D=0$ can enter the unit square.
+If $0\leq m<1/2$, the vertical line $Ce_A+D=0$ can intersect the unit square.
 In this case we need the second condition in
 \eqref{eq:linked-fishing-eb-threshold}. To see why, suppose instead that
 $Ce_A+D\leq0$. Then
@@ -634,8 +783,20 @@ part of the unit square where extinction is impossible.
     \hfill
     \begin{subfigure}{0.36\textwidth}
         \centering
+        \includegraphics[width=\textwidth]{plots/linked_extinction_map_ra2_0_rb1_2_m0_1.pdf}
+        \caption{$r_A=2.0$, $r_B=1.2$, $m=0.1$}
+    \end{subfigure}
+
+    \begin{subfigure}{0.36\textwidth}
+        \centering
         \includegraphics[width=\textwidth]{plots/linked_extinction_map_ra1_4_rb1_2_m0_1.pdf}
         \caption{$r_A=1.4$, $r_B=1.2$, $m=0.1$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.36\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/linked_extinction_map_ra1_4_rb1_2_m0_2.pdf}
+        \caption{$r_A=1.4$, $r_B=1.2$, $m=0.2$}
     \end{subfigure}
 
     \begin{subfigure}{0.36\textwidth}
@@ -646,20 +807,8 @@ part of the unit square where extinction is impossible.
     \hfill
     \begin{subfigure}{0.36\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{plots/linked_extinction_map_ra1_4_rb1_2_m0_0.pdf}
-        \caption{$r_A=1.4$, $r_B=1.2$, $m=0$}
-    \end{subfigure}
-
-    \begin{subfigure}{0.36\textwidth}
-        \centering
         \includegraphics[width=\textwidth]{plots/linked_extinction_map_ra1_4_rb1_2_m1_0.pdf}
         \caption{$r_A=1.4$, $r_B=1.2$, $m=1$}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.36\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{plots/linked_extinction_map_ra1_8_rb1_2_m0_1.pdf}
-        \caption{$r_A=1.8$, $r_B=1.2$, $m=0.1$}
     \end{subfigure}
     \caption{Extinction maps for the linked two-population model with
     fishing. The blue background is the theoretical extinction region
@@ -667,778 +816,1245 @@ part of the unit square where extinction is impossible.
     $\rho(M_f)=1$. Random simulated points are green when the population
     survives and red when it goes extinct.}
 \end{figure}
+These plots show how dispersal affects whether complete fishing in one
+patch is possible. For the sequence with $r_A=1.4$ and $r_B=1.2$,
+panel (c), where $m=0.1$, allows either patch to be fished completely,
+provided the other patch is only lightly fished. In panel (d), where
+$m=0.2$, complete fishing in patch $B$ is possible when patch $A$ is
+lightly fished, but complete fishing in patch $A$ is not possible even
+when patch $B$ is unfished. In panel (e), where $m=0.3$, neither patch
+can be fished completely.
 \subsection{Maximizing Fishing Yield}
-We now ask how to choose the fishing efforts $e_A$ and $e_B$ in order to
-maximize total equilibrium fishing yield. In this problem the parameters
-$r_A$, $r_B$, $K_A$, $K_B$, and $m$ are fixed. The only control variables
-are $e_A$ and $e_B$.
 
-For each choice of $e_A$ and $e_B$, the equilibrium populations are
-determined by \eqref{eq:linked-fishing-model}. To keep the formulas
-readable, define the post-growth, post-movement populations before
-fishing by
+As in the single-patch model, survival is not the only question. Once the
+linked system can persist, we can ask which fishing efforts give the
+largest sustainable equilibrium yield. The difference is that now the two
+patches interact through dispersal, so changing the effort in one patch
+also changes the equilibrium population in the other. This section
+formulates that optimization problem and then classifies the possible
+maximizers.
+
+\subsubsection{Karush--Kuhn--Tucker Conditions}
+
+We will actively use the Karush--Kuhn--Tucker conditions to certify the
+maximizing candidate in each case. Since the yield problem is a
+maximization problem, we state the conditions explicitly in the
+maximization convention. Consider
 \begin{equation}
-    \label{eq:linked-fishing-growth-before-harvest}
-    \begin{aligned}
-        G_A(N_A,N_B)
-            &=
-            (1-m)\frac{K_A r_A N_A}{K_A+N_A}
-            +m\frac{K_B r_B N_B}{K_B+N_B},\\
-        G_B(N_A,N_B)
-            &=
-            m\frac{K_A r_A N_A}{K_A+N_A}
-            +(1-m)\frac{K_B r_B N_B}{K_B+N_B}.
-    \end{aligned}
+    \label{eq:kkt-general-problem}
+    \text{maximize } f(x)
+    \qquad\text{subject to}\qquad
+    g_i(x)\leq0,\quad i=1,\ldots,s.
 \end{equation}
-At equilibrium,
+A constraint is called \textbf{active} at $x^*$ if $g_i(x^*)=0$;
+otherwise it is \textbf{inactive}. In the active-set language, each case
+below corresponds to a choice of which constraints are active.
+
+For this maximization convention, define the Lagrangian by
 \begin{equation}
-    \label{eq:linked-fishing-yield-constraints}
-    \begin{aligned}
-        N_A^*-(1-e_A)G_A(N_A^*,N_B^*) &= 0,\\
-        N_B^*-(1-e_B)G_B(N_A^*,N_B^*) &= 0.
-    \end{aligned}
-\end{equation}
-The amount harvested from population $A$ is $e_A G_A(N_A^*,N_B^*)$,
-and similarly for population $B$. Therefore the total equilibrium yield
-is
-\begin{equation*}
-    Y=e_A G_A(N_A^*,N_B^*)+e_B G_B(N_A^*,N_B^*).
-\end{equation*}
-Using the equilibrium constraints in
-\eqref{eq:linked-fishing-yield-constraints}, this can also be written as
-\begin{equation}
-    \label{eq:linked-fishing-yield}
-    Y
+    \label{eq:kkt-lagrangian}
+    \mathcal L(x,\lambda)
     =
-    \frac{e_A N_A^*}{1-e_A}
+    f(x)-\sum_{i=1}^s \lambda_i g_i(x).
+\end{equation}
+The minus sign matches the convention $g_i(x)\leq0$ for a maximization
+problem.
+
+The KKT conditions are the following. First, the point must satisfy the
+original constraints:
+\begin{equation}
+    \label{eq:kkt-primal-feasibility}
+    g_i(x^*)\leq0,
+    \qquad i=1,\ldots,s.
+\end{equation}
+This is called \textbf{primal feasibility}.
+
+Second, every inequality multiplier must be nonnegative:
+\begin{equation}
+    \label{eq:kkt-dual-feasibility}
+    \lambda_i\geq0,
+    \qquad i=1,\ldots,s.
+\end{equation}
+This is called \textbf{dual feasibility}.
+
+Third, each multiplier can be nonzero only when its constraint is active:
+\begin{equation}
+    \label{eq:kkt-complementary-slackness}
+    \lambda_i g_i(x^*)=0,
+    \qquad i=1,\ldots,s.
+\end{equation}
+This is called \textbf{complementary slackness}.
+
+Finally, the derivative of the Lagrangian with respect to $x$ must vanish:
+\begin{equation}
+    \label{eq:kkt-stationarity}
+    \nabla_x\mathcal L(x^*,\lambda)
+    =
+    \nabla f(x^*)-\sum_{i=1}^s \lambda_i \nabla g_i(x^*)=0.
+\end{equation}
+This is the \textbf{stationarity condition}.
+
+For a concave maximization problem over a convex feasible set, these
+conditions are sufficient for global optimality; see Boyd and Vandenberghe
+\cite[Chapter~5]{boyd-vandenberghe-2004}. Thus, once we show that a
+candidate satisfies
+\eqref{eq:kkt-primal-feasibility}--\eqref{eq:kkt-stationarity},
+we have proved that it is a global maximizer, not merely a local candidate.
+
+\subsubsection{Problem Formulation}
+
+We first formulate the problem in the original effort variables. For fixed
+parameters $K_A,K_B>0$, $r_A,r_B\geq0$, and $0\leq m\leq1$, define
+\begin{equation}
+    \label{eq:growth-functions}
+    F_A(N_A)=\frac{K_A r_A N_A}{K_A+N_A},
+    \qquad
+    F_B(N_B)=\frac{K_B r_B N_B}{K_B+N_B}.
+\end{equation}
+After growth and dispersal, but before harvesting, the patch populations are
+\begin{equation}
+    \label{eq:preharvest-growth}
+    \begin{aligned}
+    G_A(N_A,N_B)&=(1-m)F_A(N_A)+mF_B(N_B),\\
+    G_B(N_A,N_B)&=mF_A(N_A)+(1-m)F_B(N_B).
+    \end{aligned}
+\end{equation}
+For efforts $0\leq e_A,e_B\leq1$, an equilibrium satisfies
+\begin{equation}
+    \label{eq:effort-equilibrium}
+    N_A=(1-e_A)G_A(N_A,N_B),
+    \qquad
+    N_B=(1-e_B)G_B(N_A,N_B).
+\end{equation}
+If the positive equilibrium determined by $(e_A,e_B)$ is denoted by
+$N_A^*(e_A,e_B)$ and $N_B^*(e_A,e_B)$, then the equilibrium yield is
+\begin{equation}
+    \label{eq:effort-yield}
+    Y(e_A,e_B)
+    =
+    e_A G_A(N_A^*,N_B^*)
     +
-    \frac{e_B N_B^*}{1-e_B},
-    \qquad
-    0\leq e_A,e_B<1.
+    e_B G_B(N_A^*,N_B^*).
 \end{equation}
-Notice that $N_A^*$ and $N_B^*$ depend on the efforts $e_A$ and $e_B$.
-Thus, when we maximize the yield, we should think of the equilibrium
-populations as functions of the efforts.
-Throughout this section the efforts are restricted to the unit square
-$0\leq e_A,e_B\leq1$. This is the natural range for fishing effort:
-$e_i=0$ means no fishing in patch $i$, and $e_i=1$ means that all fish
-present before fishing are removed. In this range, nonnegative
-populations stay nonnegative because $F_A,F_B\geq0$ and
-$1-e_A,1-e_B\geq0$. When a boundary candidate is defined
-implicitly by equilibrium equations, we choose the nonnegative
-equilibrium solution.
+The effort formulation of the maximization problem is therefore
+\begin{equation}
+    \label{eq:effort-maximization-problem}
+    \max_{0\leq e_A,e_B\leq1} Y(e_A,e_B),
+\end{equation}
+where the populations $N_A^*(e_A,e_B)$ and $N_B^*(e_A,e_B)$ are determined
+implicitly by \eqref{eq:effort-equilibrium}.
 
-Before doing the yield maximization, we should first check that the
-system can persist. If the population already goes extinct without
-fishing, then there is no positive equilibrium yield to maximize. In the
-rest of this section we therefore assume that the model is in the
-persistence case, using the extinction criterion
-\eqref{eq:linked-fishing-spectral-criterion} and its threshold form
-\eqref{eq:linked-fishing-eb-threshold} as a check on candidate efforts.
+This is the biologically direct formulation, but it is not the most
+convenient one for calculation. The difficulty is that the variables being
+optimized, $e_A$ and $e_B$, also change the equilibrium populations. To make
+the constraints explicit, we reformulate the same problem using the
+equilibrium populations $(N_A,N_B)$ as the variables.
 
-Two corners are immediate. If $e_A=e_B=0$, there is no fishing and the
-yield is zero. If $e_A=e_B=1$, all fish present before fishing are
-removed, so the equilibrium population is zero and the equilibrium yield
-is again zero. Neither corner can be a positive-yield maximum, so these
-two zero-yield corners are omitted from the candidate table.
-
-After removing these zero-yield corners, the remaining candidates come
-from the boundary edges and from the open interior. The two populations
-play symmetric roles, so several cases can be derived in pairs.
-
-\subsubsection{Complete-Harvest Edges}
-The complete-harvest edges are $e_A=1$ and $e_B=1$. We start with the
-edge $e_A=1$, where patch $A$ is completely harvested. Then $N_A^*=0$.
-If $e_B<1$, the remaining equilibrium equation is
-\begin{equation*}
-    N_B^*
+From \eqref{eq:effort-equilibrium}, whenever $G_A,G_B>0$ the efforts
+that maintain a chosen equilibrium pair $(N_A,N_B)$ are
+\begin{equation}
+    \label{eq:effort-recovery}
+    e_A=1-\frac{N_A}{G_A(N_A,N_B)},
+    \qquad
+    e_B=1-\frac{N_B}{G_B(N_A,N_B)}.
+\end{equation}
+The restrictions $0\leq e_A,e_B\leq1$ are therefore equivalent to
+\begin{equation}
+    \label{eq:population-domain-inequalities}
+    0\leq N_A\leq G_A(N_A,N_B),
+    \qquad
+    0\leq N_B\leq G_B(N_A,N_B).
+\end{equation}
+Thus the feasible population domain is
+\begin{equation}
+    \label{eq:population-domain}
+    \mathcal D
     =
-    (1-e_B)(1-m)
-    \frac{K_Br_BN_B^*}{K_B+N_B^*}.
-\end{equation*}
-\[
-    \Downarrow
-\]
-\begin{align*}
-    1
-        &=
-        (1-e_B)(1-m)
-        \frac{K_Br_B}{K_B+N_B^*},\\
-    K_B+N_B^*
-        &=
-        K_Br_B(1-m)(1-e_B).
-\end{align*}
-Thus, on this edge,
-\begin{equation*}
-    N_B^*=K_B\left(r_B(1-m)(1-e_B)-1\right),
-\end{equation*}
-
-On the same edge, $N_A^*=0$, so the growth in patch $A$ is zero:
-\begin{equation*}
-    G_A(N_A^*,N_B^*)=mF_B(N_B^*),
-    \qquad
-    G_B(N_A^*,N_B^*)=(1-m)F_B(N_B^*).
-\end{equation*}
-Since $e_A=1$, the yield is
-\begin{equation*}
-    Y=
-    G_A(N_A^*,N_B^*)+e_BG_B(N_A^*,N_B^*)
+    \left\{
+    (N_A,N_B)\in\mathbb R_{\geq0}^2:
+    N_A\leq G_A(N_A,N_B),\;
+    N_B\leq G_B(N_A,N_B)
+    \right\}.
+\end{equation}
+In this domain, the yield becomes
+\begin{equation}
+    \label{eq:population-yield-before-separation}
+    Y(N_A,N_B)
     =
-    \left(m+(1-m)e_B\right)
-    F_B(N_B^*).
-\end{equation*}
-To make this a one-variable expression, write
-\begin{equation*}
-    q=1-e_B,
-    \qquad
-    c=1-m.
-\end{equation*}
-Then
-\begin{equation*}
-    N_B^*=K_B(r_Bcq-1),
-    \qquad
-    F_B(N_B^*)=\frac{N_B^*}{cq}.
-\end{equation*}
-The yield becomes
-\begin{align*}
-    Y(q)
-        &=
-        \left(1-cq\right)
-        \frac{K_B(r_Bcq-1)}{cq}\\
-        &=
-        K_B\left(r_B+1-\frac{1}{cq}-r_Bcq\right).
-\end{align*}
-Differentiating with respect to $q$ gives
-\begin{equation*}
-    \frac{dY}{dq}
+    G_A(N_A,N_B)-N_A
+    +
+    G_B(N_A,N_B)-N_B.
+\end{equation}
+Since dispersal only redistributes the growth terms,
+$G_A+G_B=F_A+F_B$, and hence
+\begin{equation}
+    \label{eq:population-yield}
+    Y(N_A,N_B)
     =
-    K_B\left(\frac{1}{cq^2}-r_Bc\right).
-\end{equation*}
-The critical point satisfies
-\begin{equation*}
-    q=\frac{1}{(1-m)\sqrt{r_B}}.
-\end{equation*}
-Since $q=1-e_B$, the complete-harvest-in-$A$ candidate is
-\begin{equation*}
-    e_B^*=1-\frac{1}{(1-m)\sqrt{r_B}},
-\end{equation*}
-and the corresponding candidate yield is
-\begin{equation*}
-    Y=K_B(\sqrt{r_B}-1)^2.
-\end{equation*}
+    F_A(N_A)-N_A
+    +
+    F_B(N_B)-N_B.
+\end{equation}
+The population-domain maximization problem is
+\begin{equation}
+    \label{eq:population-maximization-problem}
+    \max_{(N_A,N_B)\in\mathcal D} Y(N_A,N_B).
+\end{equation}
+This is not a dual problem. It is the same equilibrium-yield problem written
+with different variables: after solving \eqref{eq:population-maximization-problem},
+the corresponding efforts are recovered from
+\eqref{eq:effort-recovery}.
 
-The edge $e_B=1$ gives the symmetric case. Now $N_B^*=0$, and exchanging
-the roles of $A$ and $B$ gives
-\begin{equation*}
-    e_A^*=1-\frac{1}{(1-m)\sqrt{r_A}}.
-\end{equation*}
-The corresponding candidate yield is
-\begin{equation*}
-    Y=K_A(\sqrt{r_A}-1)^2.
-\end{equation*}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{plots/linked_complete_harvest_yield_examples.pdf}
-    \caption{Examples where the yield-maximizing strategy lies on a
-    complete-harvest edge. The red point marks the corresponding
-    analytic edge candidate. The black cross marks the maximum found on
-    the simulation grid. The color background and white contours show
-    the simulated equilibrium yield over the effort square.}
-\end{figure}
-\noindent\textbf{Complete harvest in $A$.}
-For the left plot,
-$r_A=0.9274$, $r_B=4.3917$, and $m=0.1784$. The analytic edge candidate
-is
-\begin{equation*}
-    (e_A^*,e_B^*)=(1.0000,0.4192),
-    \qquad
-    Y\approx1.2004.
-\end{equation*}
-On the simulation grid, the largest sampled yield occurs at
-\begin{equation*}
-    (e_A,e_B)=(1.0000,0.4200),
-    \qquad
-    Y\approx1.2004.
-\end{equation*}
+The objective in \eqref{eq:population-yield} is concave. Its Hessian is
+\begin{equation}
+    \label{eq:yield-hessian}
+    \nabla^2Y(N_A,N_B)
+    =
+    \begin{pmatrix}
+        -\dfrac{2K_A^2r_A}{(K_A+N_A)^3} & 0\\
+        0 & -\dfrac{2K_B^2r_B}{(K_B+N_B)^3}
+    \end{pmatrix},
+\end{equation}
+Thus
+\begin{equation}
+    \label{eq:yield-hessian-negative-semidefinite}
+    \nabla^2Y(N_A,N_B)\preceq0,
+\end{equation}
+so the Hessian is negative semidefinite for $K_A,K_B>0$ and
+$r_A,r_B\geq0$.
 
-\noindent\textbf{Complete harvest in $B$.}
-For the right plot,
-$r_A=3.4753$, $r_B=0.4583$, and $m=0.2171$. The analytic edge candidate
-is
-\begin{equation*}
-    (e_A^*,e_B^*)=(0.3148,1.0000),
-    \qquad
-    Y\approx0.7469.
-\end{equation*}
-On the simulation grid, the largest sampled yield occurs at
-\begin{equation*}
-    (e_A,e_B)=(0.3100,1.0000),
-    \qquad
-    Y\approx0.7468.
-\end{equation*}
-
-\subsubsection{No-Take Edges}
-The no-take edges are $e_A=0$ and $e_B=0$. Here one patch is protected
-from fishing, while the other patch may still be harvested. Direct
-symbolic elimination in the population variables gives a degree-six
-polynomial. This polynomial is an algebraic abomination: it is possible
-to write down, but horrible to use and not helpful for understanding the
-solution. Instead, we change variables from the equilibrium populations
-to the local growth derivatives
-\begin{equation*}
+We also need to check that the feasible population domain is convex. The
+four boundary conditions in \eqref{eq:population-domain} can be
+written in KKT form as
+\begin{equation}
+    \label{eq:population-constraints-kkt-form}
     \begin{aligned}
-        a&=\sqrt{r_A},
+        -N_A&\leq0,
         &
-        b&=\sqrt{r_B},\\
-        x&=\sqrt{q_A},
+        -N_B&\leq0,
+        \\
+        N_A-G_A(N_A,N_B)&\leq0,
         &
-        y&=\sqrt{q_B},\\
-        q_A&=F_A'(N_A^*),
-        &
-        q_B&=F_B'(N_B^*).
+        N_B-G_B(N_A,N_B)&\leq0.
     \end{aligned}
-\end{equation*}
-The quantities $q_A$ and $q_B$ are the local growth derivatives at the
-candidate equilibrium. In other words, they are the slopes of the two
-Beverton--Holt growth functions at $N_A^*$ and $N_B^*$.
+\end{equation}
+The first two inequalities are just $N_A\geq0$ and $N_B\geq0$ written in
+the form $g_i\leq0$. Each one defines a half-plane, and half-planes are
+convex.
 
-For the Beverton-Holt map,
+For the last two inequalities, note that $G_A$ and $G_B$ are concave
+functions of $(N_A,N_B)$. Indeed, since $0\leq m\leq1$, the coefficients
+$m$ and $1-m$ are nonnegative. Therefore $G_A=(1-m)F_A+mF_B$ and
+$G_B=mF_A+(1-m)F_B$ are nonnegative linear combinations of the concave
+Beverton--Holt growth functions $F_A$ and $F_B$. Hence $G_A$ and $G_B$
+are concave. Therefore $-G_A$ and $-G_B$ are convex. Adding the linear
+terms $N_A$ and $N_B$ preserves convexity, so
 \begin{equation*}
+    N_A-G_A(N_A,N_B),
+    \qquad
+    N_B-G_B(N_A,N_B)
+\end{equation*}
+are convex functions. A sublevel set of a convex function,
+$\{x:g_i(x)\leq0\}$, is convex
+\cite[Section~3.1.6]{boyd-vandenberghe-2004}. Hence all four inequalities in
+\eqref{eq:population-constraints-kkt-form} define convex sets.
+The intersection of convex sets is convex
+\cite[Section~2.3.1]{boyd-vandenberghe-2004}. Their intersection is exactly
+$\mathcal D$, so $\mathcal D$ is convex.
+
+Therefore the problem has a concave objective on a convex feasible domain.
+For later use, label the four constraint functions as
+\begin{equation}
+    \label{eq:population-constraint-functions}
+    \begin{aligned}
+    g_1(N_A,N_B)&=-N_A,\\
+    g_2(N_A,N_B)&=-N_B,\\
+    g_3(N_A,N_B)&=N_A-G_A(N_A,N_B),\\
+    g_4(N_A,N_B)&=N_B-G_B(N_A,N_B).
+    \end{aligned}
+\end{equation}
+With multipliers $\lambda_1,\lambda_2,\lambda_3,\lambda_4\geq0$, the
+Lagrangian for the population-domain yield problem is
+\begin{equation}
+    \label{eq:population-lagrangian}
+    \begin{aligned}
+    \mathcal L
+    &=
+    Y(N_A,N_B)
+    -\lambda_1 g_1(N_A,N_B)
+    -\lambda_2 g_2(N_A,N_B)\\
+    &\qquad
+    -\lambda_3 g_3(N_A,N_B)
+    -\lambda_4 g_4(N_A,N_B).
+    \end{aligned}
+\end{equation}
+Equivalently,
+\begin{equation}
+    \label{eq:population-lagrangian-expanded}
+    \begin{aligned}
+    \mathcal L
+    &=
+    Y(N_A,N_B)
+    +\lambda_1N_A+\lambda_2N_B\\
+    &\qquad
+    -\lambda_3\bigl(N_A-G_A(N_A,N_B)\bigr)
+    -\lambda_4\bigl(N_B-G_B(N_A,N_B)\bigr).
+    \end{aligned}
+\end{equation}
+The cases below are active-set KKT certificates for
+\eqref{eq:population-maximization-problem}: in each case we identify
+the active constraints and verify
+\eqref{eq:kkt-primal-feasibility}--\eqref{eq:kkt-stationarity}.
+
+\subsubsection{Interior Case}
+
+The interior case means that none of the four constraints in
+\eqref{eq:population-constraints-kkt-form} is active. Equivalently,
+\begin{equation*}
+    N_A>0,\qquad N_B>0,\qquad N_A<G_A(N_A,N_B),\qquad
+    N_B<G_B(N_A,N_B).
+\end{equation*}
+In effort variables this means
+\begin{equation*}
+    0<e_A<1,
+    \qquad
+    0<e_B<1.
+\end{equation*}
+Since all constraints are inactive, complementary slackness
+\eqref{eq:kkt-complementary-slackness} is satisfied by taking all
+multipliers equal to zero:
+\begin{equation*}
+    \lambda_1=\lambda_2=\lambda_3=\lambda_4=0.
+\end{equation*}
+Dual feasibility \eqref{eq:kkt-dual-feasibility} is then automatic,
+and stationarity \eqref{eq:kkt-stationarity} reduces to the ordinary
+first-order equations
+\begin{equation}
+    \label{eq:interior-stationarity}
+    \frac{\partial Y}{\partial N_A}=0,
+    \qquad
+    \frac{\partial Y}{\partial N_B}=0.
+\end{equation}
+Using the separated yield formula \eqref{eq:population-yield}, the
+partial derivatives are
+\begin{equation}
+    \label{eq:interior-yield-partials}
+    \frac{\partial Y}{\partial N_A}=F_A'(N_A)-1,
+    \qquad
+    \frac{\partial Y}{\partial N_B}=F_B'(N_B)-1.
+\end{equation}
+Therefore the stationarity conditions
+\eqref{eq:interior-stationarity} become
+\begin{equation}
+    \label{eq:interior-marginal-equations}
+    F_A'(N_A^*)=1,
+    \qquad
+    F_B'(N_B^*)=1.
+\end{equation}
+For the Beverton--Holt growth functions,
+\begin{equation}
+    \label{eq:beverton-holt-derivatives}
     F_A'(N_A)=\frac{K_A^2r_A}{(K_A+N_A)^2},
     \qquad
     F_B'(N_B)=\frac{K_B^2r_B}{(K_B+N_B)^2}.
-\end{equation*}
-Using $q_A=F_A'(N_A^*)$, $x=\sqrt{q_A}$, and $a=\sqrt{r_A}$ gives
-\begin{equation*}
-    x=\frac{K_Aa}{K_A+N_A^*}.
-\end{equation*}
-Solving this equation for $N_A^*$ gives
-$N_A^*=K_A(a-x)/x$. The same calculation in patch $B$ gives the
-corresponding expression for $N_B^*$. Thus this change of variables gives
-\begin{equation}
-    \label{eq:no-take-population-recovery}
-    N_A^*=K_A\frac{a-x}{x},
-    \qquad
-    N_B^*=K_B\frac{b-y}{y},
 \end{equation}
-Substituting these expressions into the Beverton--Holt growth functions
-gives
-\begin{equation*}
-    F_A(N_A^*)=K_Aa(a-x),
-    \qquad
-    F_B(N_B^*)=K_Bb(b-y).
-\end{equation*}
-Now consider the no-take edge $e_A=0$. On this edge, the yield is
-$Y=e_BG_B(N_A^*,N_B^*)$, and the equilibrium constraints are
-\begin{equation*}
-    N_A^*=G_A(N_A^*,N_B^*),
-    \qquad
-    N_B^*=(1-e_B)G_B(N_A^*,N_B^*).
-\end{equation*}
-There are two constraints, so introduce two Lagrange multipliers. On
-this edge the variables are $N_A$, $N_B$, and $e_B$, and the Lagrangian is
-\begin{equation*}
-    \begin{aligned}
-    \mathcal{L}
-    ={}&e_BG_B(N_A,N_B)
-    +\lambda_A\left(N_A-G_A(N_A,N_B)\right)\\
-    &+\lambda_B\left(N_B-(1-e_B)G_B(N_A,N_B)\right).
-    \end{aligned}
-\end{equation*}
-All derivatives in this calculation are evaluated at the candidate
-equilibrium. The derivative with respect to $e_B$ is
-\begin{equation*}
-    \frac{\partial\mathcal{L}}{\partial e_B}
-    =
-    G_B+\lambda_BG_B
-    =
-    (1+\lambda_B)G_B.
-\end{equation*}
-For a positive-yield candidate $G_B>0$, and therefore $\lambda_B=-1$.
-The derivative with respect to $N_A$ then gives
-\begin{equation*}
-    \lambda_A
-    =
-    -\frac{m q_A}{1-(1-m)q_A}.
-\end{equation*}
-Finally, the derivative with respect to $N_B$ gives
-\begin{equation*}
-    (1-m)q_B-mq_B\lambda_A-1=0.
-\end{equation*}
-Substitute the expression for $\lambda_A$ into this last equation and
-clear the denominator:
-\begin{equation*}
-    (1-m)(q_A+q_B)+(2m-1)q_Aq_B=1.
-\end{equation*}
-Since $q_A=x^2$ and $q_B=y^2$, the no-take stationarity condition becomes
-the single relation
+Therefore the interior population candidate is
 \begin{equation}
-    \label{eq:no-take-stationarity-curve}
-    (1-m)(x^2+y^2)+(2m-1)x^2y^2=1.
+    \label{eq:interior-populations}
+    N_A^*=K_A(\sqrt{r_A}-1),
+    \qquad
+    N_B^*=K_B(\sqrt{r_B}-1).
 \end{equation}
-This is the curve shown in orange in Figure~\ref{fig:no-take-yield-examples}.
-It contains the no-take candidates that satisfy the first-order condition
-after the change from population variables to local derivative variables.
+This is an interior population candidate only when
+\begin{equation}
+    \label{eq:interior-r-condition}
+    r_A>1,
+    \qquad
+    r_B>1.
+\end{equation}
 
-Equation \eqref{eq:no-take-stationarity-curve} can be solved explicitly
-for one derivative variable in terms of the other. On the edge $e_A=0$,
-solving it for $y$ gives
-\begin{equation*}
-    y_A(x)
-    =
-    \sqrt{
-        \frac{1-(1-m)x^2}
-             {1-m+(2m-1)x^2}
-    }.
-\end{equation*}
-This curve gives the first-order condition, but not the equilibrium
-itself. We still need to find which value of $x$ also satisfies the
-protected patch equilibrium equation. Since $e_A=0$, patch $A$ is not
-harvested, so its equilibrium equation is
-\begin{equation*}
-    N_A^*=(1-m)F_A(N_A^*)+mF_B(N_B^*).
-\end{equation*}
-In derivative variables, the left side is
-$N_A^*=K_A(a-x)/x$, and the growth terms are
-$F_A(N_A^*)=K_Aa(a-x)$ and
-$F_B(N_B^*)=K_Bb(b-y)$. On the stationarity curve, $y=y_A(x)$.
-Substituting these expressions into the patch $A$ equilibrium equation
-gives the scalar equation
+Substituting \eqref{eq:interior-populations} into the
+Beverton--Holt maps gives
 \begin{equation}
-    \label{eq:no-take-a-scalar-root}
-    K_A\frac{a-x}{x}
-    =
-    (1-m)K_Aa(a-x)+mK_Bb\bigl(b-y_A(x)\bigr).
+    \label{eq:interior-growth-values}
+    F_A(N_A^*)=K_A\sqrt{r_A}(\sqrt{r_A}-1),
+    \qquad
+    F_B(N_B^*)=K_B\sqrt{r_B}(\sqrt{r_B}-1).
 \end{equation}
-After solving this equation for $x$, set $y=y_A(x)$. The effort in patch
-$B$ comes from the patch $B$ equilibrium constraint,
-\begin{equation*}
-    N_B^*=(1-e_B)G_B(N_A^*,N_B^*).
-\end{equation*}
-Solving this constraint for $e_B$ gives
-\begin{equation*}
-    e_B^*=1-\frac{N_B^*}{G_B(N_A^*,N_B^*)}.
-\end{equation*}
-Here
-\begin{equation*}
-    N_B^*=K_B\frac{b-y}{y}
-\end{equation*}
-and
-\begin{equation*}
-    G_B(N_A^*,N_B^*)
+Substituting \eqref{eq:interior-growth-values} into the definitions
+of $G_A$ and $G_B$ gives
+\begin{equation}
+    \label{eq:interior-g-star}
+    \begin{aligned}
+    G_A^*
+    &=
+    (1-m)K_A\sqrt{r_A}(\sqrt{r_A}-1)
+    +mK_B\sqrt{r_B}(\sqrt{r_B}-1),\\
+    G_B^*
+    &=
+    mK_A\sqrt{r_A}(\sqrt{r_A}-1)
+    +(1-m)K_B\sqrt{r_B}(\sqrt{r_B}-1).
+    \end{aligned}
+\end{equation}
+The recovered efforts are
+\begin{equation}
+    \label{eq:interior-efforts}
+    e_A^*
     =
-    mK_Aa(a-x)+(1-m)K_Bb(b-y).
+    1-\frac{K_A(\sqrt{r_A}-1)}{G_A^*},
+    \qquad
+    e_B^*
+    =
+    1-\frac{K_B(\sqrt{r_B}-1)}{G_B^*}.
+\end{equation}
+When \eqref{eq:interior-r-condition} holds, we have
+$N_A^*>0$, $N_B^*>0$, and $G_A^*,G_B^*>0$. Thus the remaining
+conditions for the candidate to lie in the open interior of
+$\mathcal D$ are
+\begin{equation*}
+    N_A^*<G_A^*,
+    \qquad
+    N_B^*<G_B^*.
+\end{equation*}
+Using the effort recovery formula \eqref{eq:effort-recovery}, these
+two inequalities are equivalent to $e_A^*>0$ and $e_B^*>0$. Written in
+parameters, they become
+\begin{equation}
+    \label{eq:interior-effort-validity}
+    \scalebox{0.92}{$
+    -K_B(\sqrt{r_B}-1)^2
+    <
+    m\bigl(K_A\sqrt{r_A}(\sqrt{r_A}-1)
+    -K_B\sqrt{r_B}(\sqrt{r_B}-1)\bigr)
+    <
+    K_A(\sqrt{r_A}-1)^2.
+    $}
+\end{equation}
+When equality holds in either side of
+\eqref{eq:interior-effort-validity}, the candidate lies on a
+no-take boundary rather than in the open interior.
+
+The yield at the interior candidate is
+\begin{equation}
+    \label{eq:interior-yield}
+    Y_{\mathrm{int}}
+    =
+    K_A(\sqrt{r_A}-1)^2
+    +
+    K_B(\sqrt{r_B}-1)^2.
+\end{equation}
+
+We can now check the KKT conditions. The inequalities
+\eqref{eq:interior-r-condition} and
+\eqref{eq:interior-effort-validity} give primal feasibility
+\eqref{eq:kkt-primal-feasibility} with all four constraints strict.
+All multipliers are zero, so dual feasibility
+\eqref{eq:kkt-dual-feasibility} and complementary slackness
+\eqref{eq:kkt-complementary-slackness} hold. Finally,
+\eqref{eq:interior-marginal-equations} is exactly stationarity
+\eqref{eq:kkt-stationarity}. Therefore, under
+\eqref{eq:interior-r-condition} and
+\eqref{eq:interior-effort-validity}, the interior candidate is a
+global maximizer of the population-domain problem
+\eqref{eq:population-maximization-problem}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{plots/population_domain_view_interior.pdf}
+    \caption{Interior example with $K_A=K_B=1$, $r_A=1.8$,
+    $r_B=1.2$, and $m=0.2$. The left panel shows the yield over the
+    original effort square. The right panel shows the same maximization
+    problem in the population domain $\mathcal D$; the black curve is the
+    boundary of the feasible population region. In both panels, the red
+    point marks the analytic KKT candidate and the black cross marks the
+    maximum found on the plotted grid.}
+\end{figure}
+
+\subsubsection{Complete-Harvest Boundaries}
+
+We next consider the boundary where one patch has zero remaining
+population after harvesting. Start with
+\begin{equation*}
+    N_A=0,
+\end{equation*}
+which corresponds to complete harvest in patch $A$, so $e_A=1$.
+
+On this boundary, the feasibility condition for patch $B$ is
+\begin{equation}
+    \label{eq:complete-harvest-a-feasibility}
+    0\leq N_B\leq G_B(0,N_B)=(1-m)F_B(N_B).
+\end{equation}
+For $N_B>0$, this inequality is equivalent to
+\begin{equation*}
+    K_B+N_B\leq K_B(1-m)r_B.
+\end{equation*}
+Thus the feasible interval on this boundary is
+\begin{equation}
+    \label{eq:complete-harvest-a-interval}
+    0\leq N_B\leq K_B\bigl((1-m)r_B-1\bigr),
+\end{equation}
+provided $(1-m)r_B>1$. If $(1-m)r_B\leq1$, this boundary has no positive
+feasible point.
+
+The yield on this boundary is
+\begin{equation}
+    \label{eq:complete-harvest-a-yield-function}
+    Y=F_B(N_B)-N_B.
+\end{equation}
+This is now a one-dimensional maximization problem on the interval
+\eqref{eq:complete-harvest-a-interval}. A maximum on this interval
+can occur either at an endpoint or inside the boundary interval. We first
+test the second possibility, so assume
+\begin{equation*}
+    0<N_B<K_B\bigl((1-m)r_B-1\bigr).
+\end{equation*}
+At such a point, the endpoint constraints are inactive, and the
+one-variable stationarity condition is
+\begin{equation*}
+    \frac{dY}{dN_B}=F_B'(N_B)-1=0.
+\end{equation*}
+Therefore the candidate on this boundary is
+\begin{equation}
+    \label{eq:complete-harvest-a-population}
+    N_A^*=0,
+    \qquad
+    N_B^*=K_B(\sqrt{r_B}-1).
+\end{equation}
+Now we check whether this stationary point really lies inside the feasible
+interval \eqref{eq:complete-harvest-a-interval}. This means
+\begin{equation*}
+    0<K_B(\sqrt{r_B}-1)<K_B\bigl((1-m)r_B-1\bigr).
+\end{equation*}
+The left inequality gives $r_B>1$. The right inequality gives
+\begin{equation*}
+    \sqrt{r_B}-1<(1-m)r_B-1
+    \quad\Longleftrightarrow\quad
+    \sqrt{r_B}<(1-m)r_B
+    \quad\Longleftrightarrow\quad
+    (1-m)\sqrt{r_B}>1,
+\end{equation*}
+where the last step uses $r_B>1$. Thus the candidate lies inside the
+boundary interval exactly when
+\begin{equation}
+    \label{eq:complete-harvest-a-interval-condition}
+    (1-m)\sqrt{r_B}>1.
+\end{equation}
+If equality holds, the boundary candidate lands exactly on the endpoint
+$e_B=0$. The remaining possibility is
+\begin{equation*}
+    (1-m)r_B>1
+    \qquad\text{but}\qquad
+    (1-m)\sqrt{r_B}<1.
+\end{equation*}
+Then the feasible interval
+\eqref{eq:complete-harvest-a-interval} contains positive values of
+$N_B$, but the stationary point $K_B(\sqrt{r_B}-1)$ is to the right of the
+interval. On the whole feasible interval we therefore have
+\begin{equation*}
+    N_B<K_B(\sqrt{r_B}-1).
+\end{equation*}
+Since $Y'(N_B)=F_B'(N_B)-1$ and $F_B'$ is decreasing, this means
+\begin{equation*}
+    Y'(N_B)>0
+\end{equation*}
+throughout the feasible interval. Thus $Y$ is increasing on the whole
+boundary interval, so the constrained boundary maximum is attained at the
+right endpoint. This right endpoint is the case $N_B=G_B(0,N_B)$, hence
+$e_B=0$, and it is treated in the next section.
+
+Now derive the KKT multiplier. At this candidate, the active constraint is
+$g_1=-N_A=0$. The other constraints are inactive, so complementary
+slackness gives
+\begin{equation*}
+    \lambda_2=\lambda_3=\lambda_4=0.
+\end{equation*}
+Stationarity in the $N_B$ direction is exactly
+$F_B'(N_B^*)-1=0$. In the $N_A$ direction, the expanded Lagrangian
+\eqref{eq:population-lagrangian-expanded} gives
+\begin{equation*}
+    0=\frac{\partial\mathcal L}{\partial N_A}
+    =
+    \bigl(F_A'(0)-1\bigr)+\lambda_1
+    =
+    (r_A-1)+\lambda_1.
+\end{equation*}
+Hence
+\begin{equation}
+    \label{eq:complete-harvest-a-multipliers}
+    \lambda_1=1-r_A,
+    \qquad
+    \lambda_2=\lambda_3=\lambda_4=0.
+\end{equation}
+Now dual feasibility requires $\lambda_i\geq0$ for every multiplier. In
+particular, $\lambda_1\geq0$, so
+\begin{equation*}
+    1-r_A\geq0.
 \end{equation*}
 Therefore
+\begin{equation}
+    \label{eq:complete-harvest-a-multiplier-condition}
+    r_A\leq1.
+\end{equation}
+
+Combining \eqref{eq:complete-harvest-a-interval-condition} and
+\eqref{eq:complete-harvest-a-multiplier-condition}, complete harvest
+in patch $A$ gives a KKT certificate when
+\begin{equation}
+    \label{eq:complete-harvest-a-condition}
+    r_A\leq1,
+    \qquad
+    (1-m)\sqrt{r_B}>1.
+\end{equation}
+The recovered efforts are
+\begin{equation}
+    \label{eq:complete-harvest-a-efforts}
+    e_A^*=1,
+    \qquad
+    e_B^*=1-\frac{1}{(1-m)\sqrt{r_B}},
+\end{equation}
+and the yield is
+\begin{equation}
+    \label{eq:complete-harvest-a-yield}
+    Y^*=K_B(\sqrt{r_B}-1)^2.
+\end{equation}
+Primal feasibility follows from the boundary interval, dual feasibility is
+\eqref{eq:complete-harvest-a-multiplier-condition}, complementary
+slackness holds because inactive constraints have zero multipliers, and
+stationarity was checked above. Therefore, when
+\eqref{eq:complete-harvest-a-condition} holds, this boundary
+candidate is globally optimal.
+
+The complete-harvest-in-$B$ case is symmetric. The active boundary is
+$N_B=0$, equivalently $e_B=1$. If
+\begin{equation}
+    \label{eq:complete-harvest-b-condition}
+    r_B\leq1,
+    \qquad
+    (1-m)\sqrt{r_A}>1,
+\end{equation}
+then the KKT certificate gives
+\begin{equation}
+    \label{eq:complete-harvest-b-population}
+    N_B^*=0,
+    \qquad
+    N_A^*=K_A(\sqrt{r_A}-1),
+\end{equation}
+with efforts
+\begin{equation}
+    \label{eq:complete-harvest-b-efforts}
+    e_B^*=1,
+    \qquad
+    e_A^*=1-\frac{1}{(1-m)\sqrt{r_A}},
+\end{equation}
+and yield
+\begin{equation}
+    \label{eq:complete-harvest-b-yield}
+    Y^*=K_A(\sqrt{r_A}-1)^2.
+\end{equation}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{plots/population_domain_view_complete_harvest.pdf}
+    \caption{Complete-harvest examples. Each row shows the same parameter
+    set in the effort domain on the left and in the population domain on
+    the right. Complete harvest appears as $e_A=1$ or $e_B=1$ in the
+    effort domain, and as $N_A=0$ or $N_B=0$ in the population domain.}
+\end{figure}
+
+\subsubsection{Protect Source, Harvest Sink Endpoint}
+
+The previous boundary calculation also points to an important endpoint.
+On the boundary $N_A=0$, the right endpoint of the feasible interval
+\eqref{eq:complete-harvest-a-interval} is
+\begin{equation}
+    \label{eq:source-endpoint-a-sink-population}
+    N_A^*=0,
+    \qquad
+    N_B^*=K_B\bigl((1-m)r_B-1\bigr).
+\end{equation}
+This point exists with $N_B^*>0$ when
+\begin{equation}
+    \label{eq:source-endpoint-a-sink-positive}
+    (1-m)r_B>1.
+\end{equation}
+At this endpoint,
+\begin{equation*}
+    N_B^*=G_B(0,N_B^*),
+\end{equation*}
+so the recovered efforts are
+\begin{equation}
+    \label{eq:source-endpoint-a-sink-efforts}
+    (e_A^*,e_B^*)=(1,0).
+\end{equation}
+Patch $B$ is protected and acts as the source, while patch $A$ is
+harvested completely as the sink.
+
+The yield is especially simple. Since
+$N_B^*=(1-m)F_B(N_B^*)$, we have
+\begin{equation*}
+    F_B(N_B^*)=\frac{N_B^*}{1-m}.
+\end{equation*}
+Therefore
+\begin{equation}
+    \label{eq:source-endpoint-a-sink-yield}
+    Y^*
+    =
+    F_B(N_B^*)-N_B^*
+    =
+    \frac{m}{1-m}
+    K_B\bigl((1-m)r_B-1\bigr).
+\end{equation}
+
+Now check the KKT multipliers. The active constraints are
+\begin{equation*}
+    g_1=-N_A=0,
+    \qquad
+    g_4=N_B-G_B(N_A,N_B)=0.
+\end{equation*}
+The other two constraints are inactive, so
+$\lambda_2=\lambda_3=0$. Using
+\eqref{eq:source-endpoint-a-sink-population}, the marginal growth in
+patch $B$ at this endpoint is
+\begin{equation}
+    \label{eq:source-endpoint-a-sink-derivative-b}
+    F_B'(N_B^*)
+    =
+    \frac{1}{(1-m)^2r_B}.
+\end{equation}
+Stationarity in the $N_B$ direction gives
+\begin{equation*}
+    0
+    =
+    \left(\frac{1}{(1-m)^2r_B}-1\right)
+    -
+    \lambda_4
+    \left(1-\frac{1}{(1-m)r_B}\right),
+\end{equation*}
+and therefore
+\begin{equation}
+    \label{eq:source-endpoint-a-sink-lambda-b}
+    \lambda_4
+    =
+    \frac{1-(1-m)^2r_B}
+         {(1-m)\bigl((1-m)r_B-1\bigr)}.
+\end{equation}
+Now check dual feasibility for this multiplier. Since
+\eqref{eq:source-endpoint-a-sink-positive} gives
+$(1-m)r_B-1>0$, the denominator in
+\eqref{eq:source-endpoint-a-sink-lambda-b} is positive. Therefore
+$\lambda_4\geq0$ is equivalent to the numerator being nonnegative:
+\begin{equation*}
+    1-(1-m)^2r_B\geq0.
+\end{equation*}
+Equivalently,
+\begin{equation}
+    \label{eq:source-endpoint-a-sink-lambda-b-condition}
+    (1-m)\sqrt{r_B}\leq1.
+\end{equation}
+
+It remains to check the multiplier for $g_1=-N_A=0$. Stationarity in the
+$N_A$ direction gives
+\begin{equation*}
+    0
+    =
+    (r_A-1)+\lambda_1+m r_A\lambda_4.
+\end{equation*}
+Thus
+\begin{equation}
+    \label{eq:source-endpoint-a-sink-lambda-a}
+    \lambda_1
+    =
+    1-r_A(1+m\lambda_4).
+\end{equation}
+Dual feasibility for $\lambda_1$ requires
+\begin{equation}
+    \label{eq:source-endpoint-a-sink-ra-condition}
+    r_A\leq \frac{1}{1+m\lambda_4},
+\end{equation}
+with $\lambda_4$ given by
+\eqref{eq:source-endpoint-a-sink-lambda-b}.
+Substituting \eqref{eq:source-endpoint-a-sink-lambda-b}, this can
+be written explicitly as
+\begin{equation}
+    \label{eq:source-endpoint-a-sink-ra-condition-explicit}
+    r_A
+    \leq
+    \frac{(1-m)\bigl((1-m)r_B-1\bigr)}
+         {(1-m)^3r_B+2m-1}.
+\end{equation}
+
+Combining the conditions, the protect-$B$, harvest-$A$ endpoint gives a
+KKT certificate when
+\begin{equation}
+    \label{eq:source-endpoint-a-sink-condition}
+    (1-m)r_B>1,
+    \qquad
+    (1-m)\sqrt{r_B}\leq1,
+    \qquad
+    r_A
+    \leq
+    \frac{(1-m)\bigl((1-m)r_B-1\bigr)}
+         {(1-m)^3r_B+2m-1}.
+\end{equation}
+Under these conditions, primal feasibility follows from the endpoint
+construction, dual feasibility follows from
+\eqref{eq:source-endpoint-a-sink-lambda-b-condition} and
+\eqref{eq:source-endpoint-a-sink-ra-condition}, complementary
+slackness holds by the choice of active constraints, and stationarity was
+derived above. Therefore this endpoint is globally optimal.
+
+The symmetric endpoint protects $A$ and harvests $B$, so
+\begin{equation}
+    \label{eq:source-endpoint-b-sink-population}
+    N_A^*=K_A\bigl((1-m)r_A-1\bigr),
+    \qquad
+    N_B^*=0,
+\end{equation}
+with efforts
+\begin{equation}
+    \label{eq:source-endpoint-b-sink-efforts}
+    (e_A^*,e_B^*)=(0,1).
+\end{equation}
+Here
+\begin{equation}
+    \label{eq:source-endpoint-b-sink-lambda-a}
+    \lambda_3
+    =
+    \frac{1-(1-m)^2r_A}
+         {(1-m)\bigl((1-m)r_A-1\bigr)}.
+\end{equation}
+This symmetric endpoint gives a KKT certificate when
+\begin{equation}
+    \label{eq:source-endpoint-b-sink-condition}
+    (1-m)r_A>1,
+    \qquad
+    (1-m)\sqrt{r_A}\leq1,
+    \qquad
+    r_B
+    \leq
+    \frac{(1-m)\bigl((1-m)r_A-1\bigr)}
+         {(1-m)^3r_A+2m-1}.
+\end{equation}
+The yield is
+\begin{equation}
+    \label{eq:source-endpoint-b-sink-yield}
+    Y^*
+    =
+    \frac{m}{1-m}
+    K_A\bigl((1-m)r_A-1\bigr).
+\end{equation}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{plots/population_domain_view_source_endpoint.pdf}
+    \caption{Protect-source, harvest-sink endpoint examples. In effort
+    variables these are the corner strategies $(e_A,e_B)=(0,1)$ and
+    $(1,0)$. In population variables the same endpoints lie where one
+    patch has zero remaining population and the other lies on its no-take
+    boundary.}
+\end{figure}
+
+\subsubsection{No-Take Boundaries}
+
+One patch is protected from fishing, while the other patch may still be
+harvested partially. This is an important case, since a common
+conservation strategy is to declare a marine reserve where fishing is not
+allowed. Thus it is useful to study the optimal fishing rate in the other
+patch, even when the no-take strategy is not globally optimal. It is also
+important to know when declaring a marine reserve is itself the optimal
+choice.
+
+We first consider no take in patch $A$. In population variables this means
+\begin{equation}
+    \label{eq:no-take-a-active-constraint}
+    N_A=G_A(N_A,N_B),
+\end{equation}
+so the active constraint is $g_3=0$. For a nonendpoint no-take solution,
+the other constraints are inactive:
+\begin{equation*}
+    N_A>0,\qquad N_B>0,\qquad N_B<G_B(N_A,N_B).
+\end{equation*}
+Thus complementary slackness gives
+\begin{equation*}
+    \lambda_1=\lambda_2=\lambda_4=0,
+\end{equation*}
+and only $\lambda_3$ remains.
+
+From the expanded Lagrangian
+\eqref{eq:population-lagrangian-expanded}, stationarity gives
+\begin{equation}
+    \label{eq:no-take-a-kkt-stationarity}
+    \begin{aligned}
+    1-F_A'(N_A)
+    +\lambda_3\bigl(1-(1-m)F_A'(N_A)\bigr)&=0,\\
+    1-F_B'(N_B)-m\lambda_3F_B'(N_B)&=0.
+    \end{aligned}
+\end{equation}
+The second equation gives
+\begin{equation}
+    \label{eq:no-take-a-multiplier}
+    \lambda_3=\frac{1-F_B'(N_B)}{mF_B'(N_B)}
+\end{equation}
+when $m>0$. Therefore dual feasibility $\lambda_3\geq0$ is equivalent to
+\begin{equation}
+    \label{eq:no-take-a-dual-feasibility}
+    F_B'(N_B)\leq1.
+\end{equation}
+Substituting \eqref{eq:no-take-a-multiplier} into the first
+stationarity equation and clearing the denominator gives the no-take
+stationarity relation
+\begin{equation}
+    \label{eq:no-take-stationarity-derivatives}
+    (1-m)\bigl(F_A'(N_A)+F_B'(N_B)\bigr)
+    +(2m-1)F_A'(N_A)F_B'(N_B)=1.
+\end{equation}
+
+The stationarity relation can be solved directly for the marginal growth
+in patch $B$:
+\begin{equation}
+    \label{eq:no-take-a-derivative-b-from-a}
+    F_B'(N_B)
+    =
+    \frac{1-(1-m)F_A'(N_A)}
+         {1-m+(2m-1)F_A'(N_A)}.
+\end{equation}
+For the Beverton--Holt map,
+\begin{equation*}
+    F_B'(N_B)=\frac{K_B^2r_B}{(K_B+N_B)^2}.
+\end{equation*}
+Combining this with \eqref{eq:no-take-a-derivative-b-from-a} gives
+\begin{equation*}
+    \frac{K_B^2r_B}{(K_B+N_B)^2}
+    =
+    \frac{1-(1-m)F_A'(N_A)}
+         {1-m+(2m-1)F_A'(N_A)}.
+\end{equation*}
+Taking the positive square root gives
+\begin{equation*}
+    K_B+N_B
+    =
+    K_B
+    \sqrt{
+        \frac{
+        r_B\bigl(1-m+(2m-1)F_A'(N_A)\bigr)}
+        {1-(1-m)F_A'(N_A)}
+    }.
+\end{equation*}
+Thus
+\begin{equation}
+    \label{eq:no-take-a-nb-from-na}
+    \widehat N_B(N_A)
+    =
+    K_B\left(
+    \sqrt{
+        \frac{
+        r_B\bigl(1-m+(2m-1)F_A'(N_A)\bigr)}
+        {1-(1-m)F_A'(N_A)}
+    }
+    -1\right).
+\end{equation}
+The stationarity condition alone does not determine the equilibrium. The
+protected patch equation \eqref{eq:no-take-a-active-constraint} must
+also hold. Substituting $N_B=\widehat N_B(N_A)$ gives the scalar equation
+\begin{equation}
+    \label{eq:no-take-a-scalar-root}
+    N_A
+    =
+    (1-m)F_A(N_A)+mF_B\bigl(\widehat N_B(N_A)\bigr).
+\end{equation}
+After solving \eqref{eq:no-take-a-scalar-root} for $N_A$, set
+$N_B=\widehat N_B(N_A)$ and recover the effort in patch $B$ from
+\eqref{eq:effort-recovery}:
 \begin{equation}
     \label{eq:no-take-a-effort-recovery}
     e_B^*
     =
     1-
-    \frac{K_B(b-y)/y}
-         {mK_Aa(a-x)+(1-m)K_Bb(b-y)}.
+    \frac{N_B}
+         {mF_A(N_A)+(1-m)F_B(N_B)}.
 \end{equation}
-Thus, a root of \eqref{eq:no-take-a-scalar-root}, together with the
-effort recovery formula \eqref{eq:no-take-a-effort-recovery}, gives a
-no-take-in-$A$ edge candidate.
 
-The edge $e_B=0$ is symmetric. Solving
-\eqref{eq:no-take-stationarity-curve} for $x$ gives
-\begin{equation*}
-    x_B(y)
+For this active set the remaining primal checks are
+\begin{equation}
+    \label{eq:no-take-a-primal-validity}
+    N_A>0,\qquad N_B>0,\qquad N_B<G_B(N_A,N_B).
+\end{equation}
+By \eqref{eq:effort-recovery}, the last inequality is equivalent to
+$e_B^*>0$, so the recovered effort lies on the open harvested edge. The
+dual feasibility check is
+\begin{equation}
+    \label{eq:no-take-a-dual-validity}
+    F_B'(N_B)\leq1.
+\end{equation}
+Under these conditions, primal feasibility follows from
+\eqref{eq:no-take-a-active-constraint} and
+\eqref{eq:no-take-a-primal-validity}. For dual feasibility, the
+only nonzero multiplier is $\lambda_3$, and
+\eqref{eq:no-take-a-multiplier} shows that
+\eqref{eq:no-take-a-dual-validity} is exactly the condition
+$\lambda_3\geq0$.
+Complementary slackness holds because only $g_3$ is active, and
+stationarity is exactly
+\eqref{eq:no-take-a-kkt-stationarity}. Therefore this no-take
+candidate is globally optimal.
+
+The no-take-in-$B$ boundary is symmetric. Here $g_4=0$, or
+\begin{equation}
+    \label{eq:no-take-b-active-constraint}
+    N_B=G_B(N_A,N_B).
+\end{equation}
+The same stationarity relation
+\eqref{eq:no-take-stationarity-derivatives} gives
+\begin{equation}
+    \label{eq:no-take-b-derivative-a-from-b}
+    F_A'(N_A)
     =
+    \frac{1-(1-m)F_B'(N_B)}
+         {1-m+(2m-1)F_B'(N_B)}.
+\end{equation}
+Thus
+\begin{equation}
+    \label{eq:no-take-b-na-from-nb}
+    \widehat N_A(N_B)
+    =
+    K_A\left(
     \sqrt{
-        \frac{1-(1-m)y^2}
-             {1-m+(2m-1)y^2}
-    }.
-\end{equation*}
-Then the protected patch $B$ equilibrium equation becomes
+        \frac{
+        r_A\bigl(1-m+(2m-1)F_B'(N_B)\bigr)}
+        {1-(1-m)F_B'(N_B)}
+    }
+    -1\right).
+\end{equation}
+The protected patch equation becomes the scalar equation
 \begin{equation}
     \label{eq:no-take-b-scalar-root}
-    K_B\frac{b-y}{y}
+    N_B
     =
-    mK_Aa\bigl(a-x_B(y)\bigr)+(1-m)K_Bb(b-y).
+    mF_A\bigl(\widehat N_A(N_B)\bigr)+(1-m)F_B(N_B).
 \end{equation}
-After solving \eqref{eq:no-take-b-scalar-root} for $y$, set
-$x=x_B(y)$ and recover the effort in patch $A$:
+After solving \eqref{eq:no-take-b-scalar-root} for $N_B$, set
+$N_A=\widehat N_A(N_B)$ and recover the effort in patch $A$:
 \begin{equation}
     \label{eq:no-take-b-effort-recovery}
     e_A^*
     =
     1-
-    \frac{K_A(a-x)/x}
-         {(1-m)K_Aa(a-x)+mK_Bb(b-y)}.
+    \frac{N_A}
+         {(1-m)F_A(N_A)+mF_B(N_B)}.
 \end{equation}
-Thus, a root of \eqref{eq:no-take-b-scalar-root}, together with the
-effort recovery formula \eqref{eq:no-take-b-effort-recovery}, gives the
-symmetric no-take-in-$B$ edge candidate.
-
-In the examples below, the scalar equations
-\eqref{eq:no-take-a-scalar-root} and \eqref{eq:no-take-b-scalar-root}
-are solved numerically using Brent's method. The important point is that
-the change of variables reduces each no-take case to a one-dimensional
-root-finding problem, even though it does not give a short closed-form
-formula for the effort.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{plots/linked_no_take_yield_examples.pdf}
-    \caption{Examples where the yield-maximizing strategy lies on a
-    no-take edge. The orange dashed curve marks the stationarity curve
-    \eqref{eq:no-take-stationarity-curve}, the red point marks the
-    corresponding analytic edge candidate, and the black cross marks the
-    maximum found on the simulation grid. The color background and white
-    contours show the simulated equilibrium yield over the effort square.}
-    \label{fig:no-take-yield-examples}
-\end{figure}
-\noindent\textbf{No take in $A$.}
-For the left plot, $r_A=1.8685$,
-$r_B=1.0365$, and $m=0.7586$. The analytic edge candidate is
-\begin{equation*}
-    (e_A^*,e_B^*)=(0.0000,0.3255),
-    \qquad
-    Y\approx0.0874.
-\end{equation*}
-On the simulation grid, the largest sampled yield occurs at
-\begin{equation*}
-    (e_A,e_B)=(0.0000,0.3300),
-    \qquad
-    Y\approx0.0873.
-\end{equation*}
-
-\noindent\textbf{No take in $B$.}
-For the right plot, $r_A=0.8367$,
-$r_B=2.7031$, and $m=0.9817$. The analytic edge candidate is
-\begin{equation*}
-    (e_A^*,e_B^*)=(0.3413,0.0000),
-    \qquad
-    Y\approx0.1424.
-\end{equation*}
-On the simulation grid, the largest sampled yield occurs at
-\begin{equation*}
-    (e_A,e_B)=(0.3400,0.0000),
-    \qquad
-    Y\approx0.1424.
-\end{equation*}
-
-\subsubsection{Interior Candidates}
-Now consider candidates with $0<e_A<1$ and $0<e_B<1$. In the interior,
-both effort variables can vary, so we use Lagrange multipliers with the
-two equilibrium constraints. The Lagrangian is
+The symmetric primal checks are
 \begin{equation}
-    \label{eq:linked-fishing-yield-lagrangian}
-    \begin{aligned}
-        \mathcal{L}
-        &=
-        \frac{e_A N_A}{1-e_A}
-        +
-        \frac{e_B N_B}{1-e_B}\\
-        &\quad
-        +\lambda_A\left(N_A-(1-e_A)G_A(N_A,N_B)\right)\\
-        &\quad
-        +\lambda_B\left(N_B-(1-e_B)G_B(N_A,N_B)\right).
-    \end{aligned}
+    \label{eq:no-take-b-primal-validity}
+    N_A>0,\qquad N_B>0,\qquad N_A<G_A(N_A,N_B).
 \end{equation}
-An interior optimum must satisfy
+By \eqref{eq:effort-recovery}, the last inequality is equivalent to
+$e_A^*>0$. The symmetric dual feasibility check is
+\begin{equation}
+    \label{eq:no-take-b-dual-validity}
+    F_A'(N_A)\leq1.
+\end{equation}
+Here the only nonzero multiplier is $\lambda_4$, and the symmetric
+multiplier formula is
 \begin{equation*}
-    \frac{\partial\mathcal{L}}{\partial N_A}=0,
-    \qquad
-    \frac{\partial\mathcal{L}}{\partial N_B}=0,
-    \qquad
-    \frac{\partial\mathcal{L}}{\partial e_A}=0,
-    \qquad
-    \frac{\partial\mathcal{L}}{\partial e_B}=0,
+    \lambda_4=\frac{1-F_A'(N_A)}{mF_A'(N_A)}.
 \end{equation*}
-together with the two equilibrium constraints in
-\eqref{eq:linked-fishing-yield-constraints}.
+Thus \eqref{eq:no-take-b-dual-validity} is exactly the condition
+$\lambda_4\geq0$. When \eqref{eq:no-take-b-primal-validity} and
+\eqref{eq:no-take-b-dual-validity} hold, the no-take-in-$B$
+candidate is globally optimal.
 
-Start with the effort derivatives. At equilibrium,
-\begin{equation*}
-    G_A(N_A^*,N_B^*)=\frac{N_A^*}{1-e_A},
-    \qquad
-    G_B(N_A^*,N_B^*)=\frac{N_B^*}{1-e_B},
-\end{equation*}
-so the effort equations determine the multipliers. For $e_A$, the
-relevant terms in $\mathcal{L}$ are
-\begin{equation*}
-    \frac{e_A N_A^*}{1-e_A}
-    +
-    \lambda_A
-    \left(N_A^*-(1-e_A)G_A(N_A^*,N_B^*)\right).
-\end{equation*}
-Therefore
-\begin{equation*}
-    \frac{\partial\mathcal{L}}{\partial e_A}
-    =
-    \frac{N_A^*}{(1-e_A)^2}
-    +
-    \lambda_A G_A(N_A^*,N_B^*).
-\end{equation*}
-Using $G_A(N_A^*,N_B^*)=N_A^*/(1-e_A)$ and setting this derivative to
-zero gives $\lambda_A=-1/(1-e_A)$. The same calculation for patch $B$
-gives
-\begin{equation*}
-    \lambda_A=-\frac{1}{1-e_A},
-    \qquad
-    \lambda_B=-\frac{1}{1-e_B}.
-\end{equation*}
-Substitute these into the population derivatives:
-\begin{align*}
-    0
-        &=
-        \frac{\partial\mathcal{L}}{\partial N_A}\\
-        &=
-        \frac{e_A}{1-e_A}
-        -\frac{1}{1-e_A}
-        \left(1-(1-e_A)(1-m)F_A'(N_A^*)\right)
-        +mF_A'(N_A^*)\\
-        &=
-        -1+\bigl((1-m)+m\bigr)F_A'(N_A^*)\\
-        &=
-        -1+F_A'(N_A^*).
-\end{align*}
-Therefore $F_A'(N_A^*)=1$. By symmetry, $F_B'(N_B^*)=1$. Thus,
-\begin{equation*}
-    F_A'(N_A^*)=1,
-    \qquad
-    F_B'(N_B^*)=1.
-\end{equation*}
-Since
-\begin{equation*}
-    F_A'(N_A)=\frac{K_A^2r_A}{(K_A+N_A)^2},
-    \qquad
-    F_B'(N_B)=\frac{K_B^2r_B}{(K_B+N_B)^2},
-\end{equation*}
-the interior candidate has
-\begin{equation*}
-    N_A^*=K_A(\sqrt{r_A}-1),
-    \qquad
-    N_B^*=K_B(\sqrt{r_B}-1).
-\end{equation*}
-At this point the candidate populations are known. The corresponding
-efforts come from the equilibrium constraints.
-First evaluate the pre-fishing, post-movement quantities $G_A$ and
-$G_B$ at the candidate populations. Since
-\begin{equation*}
-    \begin{aligned}
-        F_A\bigl(K_A(\sqrt{r_A}-1)\bigr)
-            &=
-            K_A\sqrt{r_A}(\sqrt{r_A}-1),\\
-        F_B\bigl(K_B(\sqrt{r_B}-1)\bigr)
-            &=
-            K_B\sqrt{r_B}(\sqrt{r_B}-1),
-    \end{aligned}
-\end{equation*}
-we define
-\begin{equation*}
-    \begin{aligned}
-        G_A^*
-            &=
-            (1-m)K_A\sqrt{r_A}(\sqrt{r_A}-1)
-            +mK_B\sqrt{r_B}(\sqrt{r_B}-1),\\
-        G_B^*
-            &=
-            mK_A\sqrt{r_A}(\sqrt{r_A}-1)
-            +(1-m)K_B\sqrt{r_B}(\sqrt{r_B}-1).
-    \end{aligned}
-\end{equation*}
-Here $G_A^*$ and $G_B^*$ are the amounts present after growth and
-movement, but before fishing. The equilibrium constraints require
-\begin{equation*}
-    N_A^*=(1-e_A^*)G_A^*,
-    \qquad
-    N_B^*=(1-e_B^*)G_B^*.
-\end{equation*}
-Solving for the efforts gives
-\begin{equation*}
-    e_A^*=1-\frac{K_A(\sqrt{r_A}-1)}{G_A^*},
-    \qquad
-    e_B^*=1-\frac{K_B(\sqrt{r_B}-1)}{G_B^*}.
-\end{equation*}
-This is an interior candidate only when the computed efforts lie inside
-the unit square. When this happens, it must be compared with the boundary
-candidates above.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{plots/population_domain_view_no_take.pdf}
+    \caption{No-take examples. The effort-domain view shows the protected
+    patch as $e_A=0$ or $e_B=0$. The population-domain view shows the
+    corresponding active constraint $N_A=G_A(N_A,N_B)$ or
+    $N_B=G_B(N_A,N_B)$ as part of the feasible-region boundary.}
+\end{figure}
+
+\subsubsection{KKT Maximizer Certificates}
+
+First check whether the linked population can persist without fishing. If
+it cannot, then there is no positive sustainable yield to maximize. After
+that extinction check, the rows below are independent KKT certificates.
+Whenever the conditions in a row hold, the corresponding candidate is a
+global maximizer of \eqref{eq:population-maximization-problem}; the
+rows do not have to be checked in this order. The no-take rows are
+implicit conditions: to check them, one must first solve the corresponding
+scalar equation and then verify the primal and dual checks for that
+solution.
+
+\begin{center}
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{
+    >{\raggedright\arraybackslash}p{0.13\textwidth}
+    >{\raggedright\arraybackslash}p{0.29\textwidth}
+    >{\raggedright\arraybackslash}p{0.30\textwidth}
+    >{\raggedright\arraybackslash}p{0.17\textwidth}
+}
+\hline
+Case & If this condition holds & Maximizing efforts & Yield \\
+\hline
+Interior
+&
+\eqref{eq:interior-r-condition} and
+\eqref{eq:interior-effort-validity}
+&
+\eqref{eq:interior-efforts}
+&
+\eqref{eq:interior-yield}
+\\
+
+Complete harvest in $A$
+&
+\eqref{eq:complete-harvest-a-condition}
+&
+\eqref{eq:complete-harvest-a-efforts}
+&
+\eqref{eq:complete-harvest-a-yield}
+\\
+
+Complete harvest in $B$
+&
+\eqref{eq:complete-harvest-b-condition}
+&
+\eqref{eq:complete-harvest-b-efforts}
+&
+\eqref{eq:complete-harvest-b-yield}
+\\
+
+Protect $B$, harvest $A$
+&
+\eqref{eq:source-endpoint-a-sink-condition}
+&
+\eqref{eq:source-endpoint-a-sink-efforts}
+&
+\eqref{eq:source-endpoint-a-sink-yield}
+\\
+
+Protect $A$, harvest $B$
+&
+\eqref{eq:source-endpoint-b-sink-condition}
+&
+\eqref{eq:source-endpoint-b-sink-efforts}
+&
+\eqref{eq:source-endpoint-b-sink-yield}
+\\
+
+No take in $A$
+&
+The solution of \eqref{eq:no-take-a-scalar-root} satisfies
+\eqref{eq:no-take-a-primal-validity},
+\eqref{eq:no-take-a-dual-validity}.
+&
+$e_A^*=0$, and $e_B^*$ from
+\eqref{eq:no-take-a-effort-recovery}
+&
+$G_B(N_A,N_B)-N_B$
+\\
+
+No take in $B$
+&
+The solution of \eqref{eq:no-take-b-scalar-root} satisfies
+\eqref{eq:no-take-b-primal-validity},
+\eqref{eq:no-take-b-dual-validity}.
+&
+$e_B^*=0$, and $e_A^*$ from
+\eqref{eq:no-take-b-effort-recovery}
+&
+$G_A(N_A,N_B)-N_A$
+\\
+\hline
+\end{tabular}
+\end{center}
+
+Figure~\ref{fig:numeric-zone-map} gives a numerical check of these
+certificates over a rectangle of parameter values. For each pair
+$(r_A,r_B)$, the color shows which candidate family gives the largest
+simulated yield. The simulation first searches a coarse grid in
+$(e_A,e_B)$, then refines only the coarse grid cell containing the best
+point together with its neighboring cells. The dashed and dotted curves
+are the analytic boundaries from the conditions in the table.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{plots/linked_fishing_yield_ra1_8_rb1_2_m0_2.pdf}
-    \caption{Simulated equilibrium yield for the linked fishing model
-    with $K_A=K_B=1$, $r_A=1.8$, $r_B=1.2$, and $m=0.2$. The color
-    background and white contours show the yield as a function of the
-    fishing efforts $e_A$ and $e_B$. The red point marks the analytic
-    interior candidate, while the black cross marks the maximum found on
-    the simulation grid.}
-\end{figure}
-For this parameter set, the analytic interior candidate gives
-\begin{equation*}
-    e_A^*\approx0.1186,
-    \qquad
-    e_B^*\approx0.4556.
-\end{equation*}
-The simulation grid uses spacing $0.01$. Its largest sampled yield occurs at
-\begin{equation*}
-    e_A=0.1200,
-    \qquad
-    e_B=0.4500.
-\end{equation*}
-The two points are close; the small difference comes from the finite grid
-resolution.
-
-\subsubsection{Protected Source and Harvested Sink}
-One interesting endpoint is to close fishing in one patch and harvest the
-other patch as much as possible. In this situation,
-the protected patch acts as a source population, while movement carries
-part of its production into the harvested patch. The candidate families
-above recover this case automatically.
-
-\noindent\textbf{Case $(e_A,e_B)=(0,1)$: protect $A$, harvest $B$.}
-On the edge $e_B=1$, the complete-harvest-in-$B$ candidate is
-\begin{equation*}
-    e_A^*=1-\frac{1}{(1-m)\sqrt{r_A}}.
-\end{equation*}
-This candidate reaches the corner $e_A=0$, $e_B=1$ exactly when
-\begin{equation*}
-    (1-m)\sqrt{r_A}=1.
-\end{equation*}
-At that parameter value, the candidate policy is
-\begin{equation*}
-    e_A=0,
-    \qquad
-    e_B=1,
-\end{equation*}
-This means no fishing in patch $A$ and complete harvesting in patch $B$. At
-this endpoint,
-\begin{equation*}
-    N_B^*=0,
-    \qquad
-    N_A^*=K_A\left(r_A(1-m)-1\right).
-\end{equation*}
-Under the condition $(1-m)\sqrt{r_A}=1$, this becomes
-\begin{equation*}
-    N_A^*=K_A(\sqrt{r_A}-1),
-    \qquad
-    Y=K_A(\sqrt{r_A}-1)^2.
-\end{equation*}
-For example, with $K_A=K_B=1$, $r_A=4$, $r_B=0.8$, and $m=1/2$, the
-condition holds and the endpoint candidate is
-\begin{equation*}
-    (e_A^*,e_B^*)=(0,1),
-    \qquad
-    (N_A^*,N_B^*)=(1,0),
-    \qquad
-    Y=1.
-\end{equation*}
-
-\noindent\textbf{Case $(e_A,e_B)=(1,0)$: protect $B$, harvest $A$.}
-The symmetric endpoint starts from the edge $e_A=1$:
-\begin{equation*}
-    e_B^*=1-\frac{1}{(1-m)\sqrt{r_B}},
-\end{equation*}
-so it reaches the corner $e_A=1$, $e_B=0$ when
-\begin{equation*}
-    (1-m)\sqrt{r_B}=1.
-\end{equation*}
-At this endpoint,
-\begin{equation*}
-    N_A^*=0,
-    \qquad
-    N_B^*=K_B\left(r_B(1-m)-1\right).
-\end{equation*}
-Under the condition $(1-m)\sqrt{r_B}=1$, this becomes
-\begin{equation*}
-    N_B^*=K_B(\sqrt{r_B}-1),
-    \qquad
-    Y=K_B(\sqrt{r_B}-1)^2.
-\end{equation*}
-For $m=0.3$, this gives
-\begin{equation*}
-    r_B=\frac{1}{(1-0.3)^2}\approx2.0408.
-\end{equation*}
-With $K_A=K_B=1$ and $r_A=0.8$, this gives
-\begin{equation*}
-    (e_A^*,e_B^*)=(1,0),
-    \qquad
-    (N_A^*,N_B^*)\approx(0,0.4286),
-    \qquad
-    Y\approx0.1837.
-\end{equation*}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{plots/linked_complete_harvest_corner_example.pdf}
-    \caption{Endpoint maxima for the linked fishing model. In the left
-    panel, patch $A$ is protected and patch $B$ is completely harvested.
-    In the right panel, patch $B$ is protected and patch $A$ is
-    completely harvested with $m=0.3$. The red point marks the analytic
-    endpoint candidate, and the black cross marks the maximum found on
-    the simulation grid.}
+    \includegraphics[width=0.9\textwidth]{plots/numeric_yield_zone_map_ka2_kb1_m0_45.pdf}
+    \caption{Numerical region map for the yield-maximizing candidate
+    family with $m=0.45$, $K_A=2$, and $K_B=1$. The colored background is
+    produced by direct simulation in effort variables. The overlaid
+    curves are the analytic boundaries from the KKT certificates above.}
+    \label{fig:numeric-zone-map}
 \end{figure}
 
-\subsubsection{Candidate Summary}
-After the extinction criterion has been checked, the preceding cases
-leave a finite list of positive-yield candidates. To find the global
-maximum, evaluate every valid candidate and choose the one with the
-largest yield. Here valid means that the formulas are computable over
-the real numbers and that the computed efforts lie in the unit square
-$0\leq e_A,e_B\leq1$, including the boundary required by that case.
+\section{Conclusion}
 
-For the no-take candidates, the scalar equations first give the
-derivative variables, not the populations. The procedure is: solve
-\eqref{eq:no-take-a-scalar-root} or \eqref{eq:no-take-b-scalar-root},
-recover the other derivative variable from
-\eqref{eq:no-take-stationarity-curve}, and then recover $N_A^*$ and
-$N_B^*$ from \eqref{eq:no-take-population-recovery}.
-
-\begin{table}[H]
-    \centering
-    \scriptsize
-    \setlength{\tabcolsep}{5pt}
-    \renewcommand{\arraystretch}{1.6}
-    \resizebox{\textwidth}{!}{%
-    \begin{tabular}{lll}
-        \hline
-        Case & Candidate efforts & Candidate yield\\
-        \hline
-        Complete harvest in $A$
-            & $e_A=1,\quad
-               e_B^*=1-\dfrac{1}{(1-m)\sqrt{r_B}}$
-            & $K_B(\sqrt{r_B}-1)^2$\\
-        Complete harvest in $B$
-            & $e_B=1,\quad
-               e_A^*=1-\dfrac{1}{(1-m)\sqrt{r_A}}$
-            & $K_A(\sqrt{r_A}-1)^2$\\
-        No take in $A$
-            & $e_A=0$, with $e_B^*$ from
-               \eqref{eq:no-take-a-scalar-root}
-            & using \eqref{eq:linked-fishing-growth-before-harvest}:
-              $G_B(N_A^*,N_B^*)-N_B^*$\\
-        No take in $B$
-            & $e_B=0$, with $e_A^*$ from
-               \eqref{eq:no-take-b-scalar-root}
-            & using \eqref{eq:linked-fishing-growth-before-harvest}:
-              $G_A(N_A^*,N_B^*)-N_A^*$\\
-        Interior
-            & using \eqref{eq:linked-fishing-growth-before-harvest}:
-              $e_A^*=1-\dfrac{K_A(\sqrt{r_A}-1)}{G_A^*},\quad
-               e_B^*=1-\dfrac{K_B(\sqrt{r_B}-1)}{G_B^*}$
-            & $K_A(\sqrt{r_A}-1)^2+K_B(\sqrt{r_B}-1)^2$\\
-        \hline
-    \end{tabular}
-    }
-    \caption{Candidate yield maximizers for the linked fishing model.
-    The largest yield among the valid candidates gives the global maximum.}
-\end{table}
-
-\subsubsection{Possible Extension: Optimizing Connectivity}
-In this paper the movement parameter $m$ is fixed. In some real-world
+This paper started with the one-population Beverton--Holt model and then
+added harvesting through a fishing-effort parameter. In that setting the
+equilibria, extinction threshold, and yield-maximizing effort can be
+computed explicitly. The same questions become richer in the linked
+two-patch model, because dispersal makes the fate of each patch depend on
+the other patch.
+\\
+For the linked model, we first studied extinction. Linearization at the
+extinction equilibrium gives a matrix condition, and the spectral radius
+of this matrix determines when extinction is locally stable. This gives a
+clear way to compare the analytic extinction boundary with simulated
+dynamics.
+\\
+We then studied yield maximization for the linked model with fishing.
+The main simplification was to reformulate the problem in the equilibrium
+population variables rather than directly in the fishing efforts. In
+these variables the feasible set is convex and the yield function is
+concave, so the KKT conditions provide global optimality certificates.
+This led to several possible optimal strategies: an interior fishing
+strategy, complete harvest in one patch, protection of a source patch
+while harvesting a sink patch, and no-take marine reserve boundaries.
+The numerical region map shows how these cases divide parameter space.
+\\
+One natural future direction is to optimize the connectivity itself. In
+this paper the movement parameter $m$ is fixed. In some real-world
 settings, management may also influence connectivity: for example, by
 opening or closing migration corridors, changing habitat quality between
-regions, or modifying barriers that affect movement.
-Then the yield maximization problem would have three decision variables,
+regions, or modifying barriers that affect movement. Then the yield
+maximization problem would have three decision variables,
 \begin{equation*}
     e_A,\qquad e_B,\qquad m.
 \end{equation*}
-The same general method could still be used: write the equilibrium
-constraints, form the constrained yield problem, and compare interior and
-boundary candidates. This extension is outside the scope of the present
-paper, where the goal is to understand the effect of fishing efforts for
-a fixed linked system.
+The same general method may still be useful: write the feasible
+population domain, recover the efforts from the equilibrium constraints,
+and apply KKT active-set analysis. This extension is outside the scope of
+the present paper, where the goal was to understand the effect of fishing
+efforts for a fixed linked system.
+
+\begin{thebibliography}{9}
+
+\bibitem{beverton-holt-1957}
+R. J. H. Beverton and S. J. Holt.
+\textit{On the Dynamics of Exploited Fish Populations}.
+Fishery Investigations, Series II, Volume XIX.
+Ministry of Agriculture, Fisheries and Food, London, 1957.
+
+\bibitem{kinderlehrer-stampacchia-1980}
+D. Kinderlehrer and G. Stampacchia.
+Variational inequalities in $R^N$.
+In \textit{An Introduction to Variational Inequalities and Their
+Applications}, pages 7--22.
+Academic Press, New York, 1980.
+
+\bibitem{boyd-vandenberghe-2004}
+S. Boyd and L. Vandenberghe.
+\textit{Convex Optimization}.
+Cambridge University Press, Cambridge, 2004.
+
+\bibitem{elaydi-2005-stability}
+S. N. Elaydi.
+Stability theory.
+In \textit{An Introduction to Difference Equations}, third edition,
+pages 173--243.
+Springer, New York, 2005.
+doi: 10.1007/0-387-27602-5\_4.
+
+\end{thebibliography}
 \end{document}

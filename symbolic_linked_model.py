@@ -124,6 +124,27 @@ def linked_fishing_yield_interior_candidate() -> tuple[sp.Expr, sp.Expr, sp.Expr
     )
 
 
+def linked_fishing_yield_interior_unit_square_conditions() -> dict[str, sp.Expr]:
+    a, b = sp.symbols("a b", positive=True)
+    production_a = K_A * a * (a - 1)
+    production_b = K_B * b * (b - 1)
+    difference = sp.factor(production_a - production_b)
+
+    effort_a_positive = sp.factor(K_A * (a - 1) ** 2 - m * difference)
+    effort_b_positive = sp.factor(K_B * (b - 1) ** 2 + m * difference)
+
+    return {
+        "a": a,
+        "b": b,
+        "D": difference,
+        "e_A > 0 iff": effort_a_positive,
+        "e_B > 0 iff": effort_b_positive,
+        "combined lower bound": -K_B * (b - 1) ** 2,
+        "combined middle": m * difference,
+        "combined upper bound": K_A * (a - 1) ** 2,
+    }
+
+
 def linked_fishing_yield_reduced_interior_conditions() -> tuple[sp.Expr, sp.Expr]:
     constraint_a, constraint_b = fishing_equilibrium_constraints()
     yield_expression = linked_fishing_yield_expression()
@@ -320,6 +341,7 @@ def main() -> None:
     yield_lagrangian, yield_lagrange_equations = linked_fishing_yield_lagrange_system()
     reduced_yield_conditions = linked_fishing_yield_reduced_interior_conditions()
     interior_candidate = linked_fishing_yield_interior_candidate()
+    interior_unit_square_conditions = linked_fishing_yield_interior_unit_square_conditions()
     boundary_candidates = linked_fishing_yield_boundary_conditions()
     no_take_lagrange_reduction = linked_fishing_yield_no_take_lagrange_reduction()
     no_take_marginal_reduction = linked_fishing_yield_no_take_marginal_reduction()
@@ -411,6 +433,9 @@ def main() -> None:
     print(f"N_B = {sp.latex(interior_candidate[1])}")
     print(f"e_A = {sp.latex(interior_candidate[2])}")
     print(f"e_B = {sp.latex(interior_candidate[3])}")
+    print("Interior unit-square conditions:")
+    for name, expression in interior_unit_square_conditions.items():
+        print(f"{name}: {sp.latex(expression)}")
     print()
     print("Boundary yield candidate conditions:")
     for boundary_name, equations in boundary_candidates.items():

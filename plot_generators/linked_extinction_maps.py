@@ -39,9 +39,9 @@ PARAMETER_SETS = (
     ExtinctionMapParameters(r_a=1.4, r_b=0.8, m=0.3),
     ExtinctionMapParameters(r_a=1.4, r_b=1.2, m=0.1),
     ExtinctionMapParameters(r_a=1.4, r_b=1.2, m=0.3),
-    ExtinctionMapParameters(r_a=1.4, r_b=1.2, m=0.0),
+    ExtinctionMapParameters(r_a=1.4, r_b=1.2, m=0.2),
     ExtinctionMapParameters(r_a=1.4, r_b=1.2, m=1.0),
-    ExtinctionMapParameters(r_a=1.8, r_b=1.2, m=0.1),
+    ExtinctionMapParameters(r_a=2.0, r_b=1.2, m=0.1),
 )
 
 
