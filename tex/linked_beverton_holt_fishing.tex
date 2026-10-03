@@ -1990,7 +1990,70 @@ $\lambda_4\geq0$. When \eqref{eq:no-take-b-primal-validity} and
 \eqref{eq:no-take-b-dual-validity} hold, the no-take-in-$B$
 candidate is globally optimal.
 
-\begin{figure}[htbp]
+\paragraph{Explicit no-take conditions.}
+The known boundaries give direct parameter tests for both no-take cases.
+Write $q=1-m$. We consider nonendpoint solutions, with both equilibrium
+populations positive. No take in $A$, with $0<e_B^*<1$, is optimal exactly when
+\begin{equation}
+    \label{eq:no-take-a-parameter-condition}
+    \begin{gathered}
+    m>0,\qquad \rho(M)>1,\\[2pt]
+    K_A(\sqrt{r_A}-1)(1-q\sqrt{r_A})
+    \geq mK_B\sqrt{r_B}\max\{\sqrt{r_B}-1,0\},\\[4pt]
+    r_B>\frac{q\max\{qr_A-1,0\}}
+                  {m^2+q^2\max\{qr_A-1,0\}}.
+    \end{gathered}
+\end{equation}
+Similarly, no take in $B$, with $0<e_A^*<1$, is optimal exactly when
+\begin{equation}
+    \label{eq:no-take-b-parameter-condition}
+    \begin{gathered}
+    m>0,\qquad \rho(M)>1,\\[2pt]
+    K_B(\sqrt{r_B}-1)(1-q\sqrt{r_B})
+    \geq mK_A\sqrt{r_A}\max\{\sqrt{r_A}-1,0\},\\[4pt]
+    r_A>\frac{q\max\{qr_B-1,0\}}
+                  {m^2+q^2\max\{qr_B-1,0\}}.
+    \end{gathered}
+\end{equation}
+Here $\rho(M)$ has the explicit formula
+\eqref{eq:linked-spectral-radius-closed-form}. Each test can be applied
+on its own, without checking the other harvesting cases.
+
+\smallskip
+To justify \eqref{eq:no-take-a-parameter-condition}, use the boundaries
+already derived. The first line excludes extinction. Together with it,
+the second line forces $r_A>1$ and $q\sqrt{r_A}\leq1$, ruling out the
+complete-harvest alternatives and the protect-$B$, harvest-$A$ endpoint.
+For $r_B>1$, the second line is exactly the reversed right inequality
+in \eqref{eq:interior-effort-validity}. At the interior candidate,
+this means $N_A\geq G_A$ and $N_B<G_B$.
+An optimum with $N_A<G_A$ could move slightly towards that candidate,
+remaining feasible by continuity of the $A$ constraint and convexity of
+the $B$ constraint, while increasing yield. Hence $N_A=G_A$.
+For $r_B\leq1$, the interior case is impossible, and protecting $B$
+cannot be optimal: $F_B'(N_B)<1$, so slightly reducing its positive
+population would increase yield while preserving feasibility.
+
+\smallskip
+The last line excludes the protect-$A$, harvest-$B$ endpoint.
+If $qr_A\leq1$, that endpoint does not exist and the inequality simply
+requires $r_B>0$. If $qr_A>1$, its denominator is
+$m^2+q^2(qr_A-1)=q^3r_A+2m-1$, so it is precisely the strict reverse
+of the endpoint bound in \eqref{eq:source-endpoint-b-sink-condition}.
+There is no other positive-yield case: an optimum is interior, an axis
+maximum already treated above, or has one no-take constraint active;
+both no-take constraints active give zero yield. The earlier first-order
+and sign tests also rule out each failed case, since a failed sign gives
+a feasible direction of increasing yield. Thus only nonendpoint no take
+in $A$ remains. The same boundary tests are necessary, and exchanging
+$A$ and $B$ gives \eqref{eq:no-take-b-parameter-condition}.
+
+Equality at the interior boundary is included; equality at the
+source-endpoint boundary is excluded. The scalar equations
+\eqref{eq:no-take-a-scalar-root} and \eqref{eq:no-take-b-scalar-root}
+are needed only to calculate the optimal populations and efforts.
+
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{plots/population_domain_view_no_take.pdf}
     \caption{No-take examples. The effort-domain view shows the protected
@@ -2001,15 +2064,11 @@ candidate is globally optimal.
 
 \subsection{KKT Maximizer Certificates}
 
-First check whether the linked population can persist without fishing. If
-it cannot, then there is no positive sustainable yield to maximize. After
-that extinction check, the rows below are independent KKT certificates.
-Whenever the conditions in a row hold, the corresponding candidate is a
-global maximizer of \eqref{eq:population-maximization-problem}; the
-rows do not have to be checked in this order. The no-take rows are
-implicit conditions: to check them, one must first solve the corresponding
-scalar equation and then verify the primal and dual checks for that
-solution.
+Each row below is an independent parameter test for a global yield
+maximizer. The no-take conditions include the persistence and endpoint
+inequalities, so they require no checks against the other rows.
+If the population cannot persist without fishing, every sustainable
+yield is zero.
 
 \begin{center}
 \small
@@ -2072,9 +2131,7 @@ Protect $A$, harvest $B$
 
 No take in $A$
 &
-The solution of \eqref{eq:no-take-a-scalar-root} satisfies
-\eqref{eq:no-take-a-primal-validity},
-\eqref{eq:no-take-a-dual-validity}.
+\eqref{eq:no-take-a-parameter-condition}
 &
 $e_A^*=0$, and $e_B^*$ from
 \eqref{eq:no-take-a-effort-recovery}
@@ -2084,9 +2141,7 @@ $G_B(N_A,N_B)-N_B$
 
 No take in $B$
 &
-The solution of \eqref{eq:no-take-b-scalar-root} satisfies
-\eqref{eq:no-take-b-primal-validity},
-\eqref{eq:no-take-b-dual-validity}.
+\eqref{eq:no-take-b-parameter-condition}
 &
 $e_B^*=0$, and $e_A^*$ from
 \eqref{eq:no-take-b-effort-recovery}
