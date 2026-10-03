@@ -31,9 +31,9 @@ convex, so the Karush--Kuhn--Tucker conditions give global optimality
 certificates. This leads to several possible maximizing strategies:
 an interior fishing strategy, complete harvest in one patch, protection
 of a source patch while harvesting a sink patch, and no-take marine
-reserve boundaries. Numerical plots are used throughout to compare the
-analytic conditions with simulated dynamics and to show how the optimal
-strategy changes with the model parameters.
+reserve boundaries. Numerical plots compare the analytic conditions
+with simulated dynamics and illustrate candidate harvesting strategies
+across model parameters.
 \end{abstract}
 \section{The Single Population}
 \subsection{Beverton--Holt Model}
@@ -571,16 +571,53 @@ form
         \sqrt{(1-m)^2(r_A-r_B)^2+4m^2r_Ar_B}
     }{2}.
 \end{equation}
-Thus extinction without fishing occurs exactly when
+At $\rho(M)=1$, the linear stability test alone is inconclusive.
+Assume first that $r_A,r_B>0$ and $m>0$. Both off-diagonal entries of
+$M$ are positive, so the Perron--Frobenius theorem
+\cite[Theorem~2.12(iv), p.~30]{bullo-perron-frobenius} gives positive
+weights $w_A,w_B$ satisfying
+\begin{equation*}
+    (w_A,w_B)M=(w_A,w_B).
+\end{equation*}
+Define the weighted total population
+\begin{equation*}
+    V_t=w_A N_A(t)+w_B N_B(t).
+\end{equation*}
+Multiplying the two population equations by $w_A$ and $w_B$ and adding,
+we obtain
+\begin{equation*}
+    V_{t+1}=\sum_{i\in\{A,B\}}w_i
+    \frac{K_iN_i(t)}{K_i+N_i(t)}.
+\end{equation*}
+Subtracting from $V_t$ gives
+\begin{align*}
+    V_t-V_{t+1}
+    &=\sum_{i\in\{A,B\}}w_i\left(
+    N_i(t)-\frac{K_iN_i(t)}{K_i+N_i(t)}\right)\\
+    &=\sum_{i\in\{A,B\}}w_i
+    \frac{N_i(t)^2}{K_i+N_i(t)}\geq0.
+\end{align*}
+Thus $V_t$ is decreasing and bounded below by $0$, so $V_t\to L$
+for some $L\geq0$. Therefore $V_t-V_{t+1}\to0$.
+Since every term in the sum is nonnegative, each term tends to zero.
+As $w_A,w_B>0$, this forces $N_A(t)\to0$ and $N_B(t)\to0$.
+Hence $V_t\to0$, and extinction occurs at $\rho(M)=1$.
+
+When $m=0$, the patches are independent and the single-population
+criterion applies to each. If, for example, $r_A=0$, patch $B$ follows
+the single-population model with growth factor $(1-m)r_B=\rho(M)$,
+while patch $A$ consists only of immigrants from $B$. This gives the
+same criterion; the case $r_B=0$ is symmetric.
+Including the boundary case, the extinction criterion is
 \begin{equation}
     \label{eq:linked-extinction-closed-form}
     (1-m)(r_A+r_B)
     +
     \sqrt{(1-m)^2(r_A-r_B)^2+4m^2r_Ar_B}
-    <2.
+    \leq2.
 \end{equation}
-This recovers the independent-population condition $r_A<1$ and $r_B<1$
-when $m=0$. When $m=1$, the condition becomes $r_Ar_B<1$.
+This recovers the independent-population condition $r_A\leq1$ and $r_B\leq1$
+when $m=0$. When $m=1$, the condition becomes $r_Ar_B\leq1$.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{plots/linked_no_fishing_extinction_m0_2.pdf}
@@ -687,12 +724,18 @@ To study extinction with fishing, we linearize
     \end{pmatrix}.
 \end{equation}
 As before, the parameters $K_A$ and $K_B$ cancel from the linearized
-extinction dynamics. Extinction is determined by
+extinction dynamics. When $r_A,r_B>0$, $m>0$, and $e_A,e_B<1$, the
+weighted-total argument above settles the boundary case $\rho(M_f)=1$.
+The cases $m=0$ or a zero growth rate reduce to the single-population
+criterion as above. If $e_A=1$, then $N_A(t)=0$ after one step, and
+patch $B$ follows the single-population model with growth factor
+$(1-e_B)(1-m)r_B=\rho(M_f)$. The case $e_B=1$ is symmetric.
+Including the boundary case, the extinction criterion is
 \begin{equation}
     \label{eq:linked-fishing-spectral-criterion}
-    \rho(M_f)<1.
+    \rho(M_f)\leq1.
 \end{equation}
-The boundary between extinction and persistence is given by
+On the boundary $\rho(M_f)=1$, we have
 \begin{equation*}
     \det(I-M_f)=0.
 \end{equation*}
@@ -710,15 +753,15 @@ where
         D &= r_B - mr_B - r_Ar_B + 2mr_Br_A.
     \end{aligned}
 \end{equation*}
-The threshold curve is obtained from the boundary
+For $r_A,r_B>0$ and $0<m<1$, the extinction branch satisfies
 \begin{equation}
     \label{eq:linked-fishing-det-condition}
     (Ce_A+D)e_B-(Ae_A+B)\geq0.
 \end{equation}
 For a fixed effort $e_A$, the threshold form
 $e_B\geq(Ae_A+B)/(Ce_A+D)$ is meaningful only on the branch where
-$Ce_A+D>0$. To make the criterion valid on the whole unit square
-$0\leq e_A,e_B\leq1$, we write both parts:
+$Ce_A+D>0$. For these parameter values, the criterion on the unit square
+$0\leq e_A,e_B\leq1$ is therefore
 \begin{equation}
     \label{eq:linked-fishing-eb-threshold}
     e_B\geq\frac{Ae_A+B}{Ce_A+D}
@@ -732,6 +775,15 @@ branch. This gives the expected direction: larger fishing effort $e_B$
 pushes the system toward extinction. The final extinction region is the
 set of efforts for which the spectral condition
 \eqref{eq:linked-fishing-spectral-criterion} holds.
+At the dispersal endpoints, use the equivalent conditions
+\begin{equation*}
+    \begin{aligned}
+    m=0:&\quad r_A(1-e_A)\leq1,\qquad r_B(1-e_B)\leq1,\\
+    m=1:&\quad r_Ar_B(1-e_A)(1-e_B)\leq1.
+    \end{aligned}
+\end{equation*}
+In particular, at $m=1$ and $e_A=1$, extinction occurs even though
+$Ce_A+D=0$ and the rational threshold is undefined.
 The sign of $Ce_A+D$ can be understood directly from
 \begin{equation*}
     Ce_A+D
@@ -747,7 +799,7 @@ $-r_A(1-2m)(1-e_A)$ is nonnegative. Therefore
 and hence $Ce_A+D>0$ for every $0\leq e_A\leq1$. In this case the
 branch condition is automatic on the whole unit square.
 
-If $0\leq m<1/2$, the vertical line $Ce_A+D=0$ can intersect the unit square.
+If $0<m<1/2$, the vertical line $Ce_A+D=0$ can intersect the unit square.
 In this case we need the second condition in
 \eqref{eq:linked-fishing-eb-threshold}. To see why, suppose instead that
 $Ce_A+D\leq0$. Then
@@ -766,14 +818,14 @@ and therefore
     \frac{(1-m)^2}{1-2m}
     =
     1+\frac{m^2}{1-2m}
-    \geq1.
+    >1.
 \end{equation*}
 Since $M_f$ is a nonnegative matrix, its spectral radius is at least as
-large as any diagonal entry. Hence $\rho(M_f)\geq1$, so extinction
-cannot occur when $Ce_A+D\leq0$. Thus, for $0\leq m<1/2$, the condition
+large as any diagonal entry. Hence $\rho(M_f)>1$, so global extinction
+cannot occur when $Ce_A+D\leq0$. Thus, for $0<m<1/2$, the condition
 $Ce_A+D>0$ is not just a technical detail of the division; it removes a
 part of the unit square where extinction is impossible.
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
     \begin{subfigure}{0.36\textwidth}
         \centering
@@ -926,7 +978,8 @@ For efforts $0\leq e_A,e_B\leq1$, an equilibrium satisfies
     \qquad
     N_B=(1-e_B)G_B(N_A,N_B).
 \end{equation}
-If the positive equilibrium determined by $(e_A,e_B)$ is denoted by
+If the limiting nonnegative equilibrium from positive initial populations
+for $(e_A,e_B)$ is denoted by
 $N_A^*(e_A,e_B)$ and $N_B^*(e_A,e_B)$, then the equilibrium yield is
 \begin{equation}
     \label{eq:effort-yield}
@@ -936,6 +989,8 @@ $N_A^*(e_A,e_B)$ and $N_B^*(e_A,e_B)$, then the equilibrium yield is
     +
     e_B G_B(N_A^*,N_B^*).
 \end{equation}
+This includes equilibria with one empty patch and gives zero yield at
+the extinction equilibrium.
 The effort formulation of the maximization problem is therefore
 \begin{equation}
     \label{eq:effort-maximization-problem}
@@ -958,6 +1013,8 @@ that maintain a chosen equilibrium pair $(N_A,N_B)$ are
     \qquad
     e_B=1-\frac{N_B}{G_B(N_A,N_B)}.
 \end{equation}
+If $G_i=0$, feasibility forces $N_i=0$; any effort $e_i\in[0,1]$
+then satisfies that patch's equilibrium equation and gives zero catch.
 The restrictions $0\leq e_A,e_B\leq1$ are therefore equivalent to
 \begin{equation}
     \label{eq:population-domain-inequalities}
@@ -1892,7 +1949,7 @@ solution.
     >{\raggedright\arraybackslash}p{0.13\textwidth}
     >{\raggedright\arraybackslash}p{0.29\textwidth}
     >{\raggedright\arraybackslash}p{0.30\textwidth}
-    >{\raggedright\arraybackslash}p{0.17\textwidth}
+    >{\raggedright\arraybackslash}p{0.18\textwidth}
 }
 \hline
 Case & If this condition holds & Maximizing efforts & Yield \\
@@ -1970,21 +2027,25 @@ $G_A(N_A,N_B)-N_A$
 \end{tabular}
 \end{center}
 
-Figure~\ref{fig:numeric-zone-map} gives a numerical check of these
-certificates over a rectangle of parameter values. For each pair
-$(r_A,r_B)$, the color shows which candidate family gives the largest
-simulated yield. The simulation first searches a coarse grid in
-$(e_A,e_B)$, then refines only the coarse grid cell containing the best
-point together with its neighboring cells. The dashed and dotted curves
-are the analytic boundaries from the conditions in the table.
+Figure~\ref{fig:numeric-zone-map} illustrates the candidate families
+using a finite-time search in effort variables. For each $(r_A,r_B)$,
+a coarse grid is evaluated after 30 time steps, followed by a local
+refinement after 300 steps around the coarse winner. The colors classify
+the effort pair with the largest final-step yield found by this search.
+Near $\rho(M_f)=1$, transient yield can differ from sustainable yield,
+and local refinement can miss the equilibrium optimum. The colors are
+therefore an approximate illustration, not an independent verification
+of the KKT certificates. The dashed and dotted curves are the analytic
+boundaries from the conditions in the table.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{plots/numeric_yield_zone_map_ka2_kb1_m0_45.pdf}
-    \caption{Numerical region map for the yield-maximizing candidate
-    family with $m=0.45$, $K_A=2$, and $K_B=1$. The colored background is
-    produced by direct simulation in effort variables. The overlaid
-    curves are the analytic boundaries from the KKT certificates above.}
+    \caption{Finite-time illustration of harvesting candidate families
+    with $m=0.45$, $K_A=2$, and $K_B=1$. Colors classify the efforts
+    selected by the simulation search, subject to the limitations above.
+    The overlaid curves are the analytic boundaries from the KKT
+    certificates above.}
     \label{fig:numeric-zone-map}
 \end{figure}
 
@@ -2011,7 +2072,8 @@ concave, so the KKT conditions provide global optimality certificates.
 This led to several possible optimal strategies: an interior fishing
 strategy, complete harvest in one patch, protection of a source patch
 while harvesting a sink patch, and no-take marine reserve boundaries.
-The numerical region map shows how these cases divide parameter space.
+The numerical region map illustrates these cases, subject to the
+finite-time and local-search limitations described above.
 \\
 One natural future direction is to optimize the connectivity itself. In
 this paper the movement parameter $m$ is fixed. In some real-world
@@ -2055,6 +2117,13 @@ In \textit{An Introduction to Difference Equations}, third edition,
 pages 173--243.
 Springer, New York, 2005.
 doi: 10.1007/0-387-27602-5\_4.
+
+\bibitem{bullo-perron-frobenius}
+F. Bullo.
+\textit{Lectures on Network Systems}, edition 1.6.
+Kindle Direct Publishing, 2022.
+Theorem~2.12, pages 29--30.
+\href{https://muwo1.unibo.it/sidra2022deiuniboit/wp-content/uploads/sites/18/2022/06/LecturesNetworkSystems-FB.pdf}{Online text}.
 
 \end{thebibliography}
 \end{document}
