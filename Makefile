@@ -1,6 +1,8 @@
 TEX_DIR := tex
 TEX_MAIN := linked_beverton_holt_fishing.tex
 PDFLATEX := pdflatex
+XELATEX := xelatex
+TITLE_PAGE := $(TEX_DIR)/braude_title_page.pdf
 PYTHON := ./.venv/Scripts/python.exe -B
 COBWEB_PLOT := $(TEX_DIR)/plots/beverton_holt_cobweb_r1_4_k1.pdf
 FISHING_PLOT := $(TEX_DIR)/plots/fishing_equilibrium_r1_4_k1.pdf
@@ -27,9 +29,12 @@ PLOT_COMMON := plot_generators/common.py
 
 all: pdf
 
-pdf: $(PLOTS)
+pdf: $(TITLE_PAGE) $(PLOTS)
 	cd $(TEX_DIR) && $(PDFLATEX) -interaction=nonstopmode -halt-on-error $(TEX_MAIN)
 	cd $(TEX_DIR) && $(PDFLATEX) -interaction=nonstopmode -halt-on-error $(TEX_MAIN)
+
+$(TITLE_PAGE): $(TEX_DIR)/braude_title_page.tex $(TEX_DIR)/assets/braude_logo.png
+	cd $(TEX_DIR) && $(XELATEX) -interaction=nonstopmode -halt-on-error braude_title_page.tex
 
 $(COBWEB_PLOT): plot_generators/beverton_holt_cobweb.py $(PLOT_COMMON)
 	$(PYTHON) -m plot_generators.beverton_holt_cobweb

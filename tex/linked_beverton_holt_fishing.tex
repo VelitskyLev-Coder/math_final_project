@@ -5,15 +5,19 @@
 \usepackage{float}
 \usepackage{subcaption}
 \usepackage{array}
+\usepackage{pdfpages}
 \usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
 \numberwithin{equation}{section}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
 \title{Maximum Sustainable Yield\\ in a Two-Patch Fishery Model\\ with Beverton--Holt Growth}
-\author{}
+\author{Lev Velitsky}
 \date{\today}
 \begin{document}
-\maketitle
+\hypersetup{pageanchor=false}
+\includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{braude_title_page.pdf}
+\setcounter{page}{1}
+\hypersetup{pageanchor=true}
 \begin{abstract}
 Sustainable fishing requires balancing current catches with the fish
 populations that support future harvests. Movement between habitats makes

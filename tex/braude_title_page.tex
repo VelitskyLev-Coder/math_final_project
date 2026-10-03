@@ -1,0 +1,59 @@
+% Build with XeLaTeX; the main thesis includes the resulting one-page PDF.
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\setmainfont{Times New Roman}
+\newfontfamily\hebrewfont[Script=Hebrew]{David}
+\TeXXeTstate=1
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+% Student details are kept together for easy editing.
+\newcommand{\StudentNameHebrew}{לב וליצקי}
+\newcommand{\StudentNameEnglish}{Lev Velitsky}
+\newcommand{\HebrewLine}[1]{%
+  \makebox[\linewidth][c]{{\hebrewfont\beginR #1\endR}}\par}
+
+\begin{document}
+\begin{center}
+  % Crop only the white margins of the original logo from the Braude template.
+  \includegraphics[width=3in,trim=212bp 5bp 230bp 10bp,clip]{assets/braude_logo.png}
+
+  \vspace{0.18in}
+  {\fontsize{14}{18}\selectfont
+    \HebrewLine{המחלקה למתמטיקה}}
+  {\fontsize{12}{16}\selectfont Department of Mathematics\par}
+
+  \vspace{0.48in}
+  {\fontsize{14}{19}\selectfont
+    \HebrewLine{פרויקט מסכם לתואר בוגר במדעים}
+    \HebrewLine{במתמטיקה שימושית}}
+  \vspace{0.06in}
+  {\fontsize{11}{15}\selectfont
+    Final Project for the B.Sc. in Applied Mathematics\par}
+
+  \vspace{0.48in}
+  {\fontsize{20}{26}\selectfont\bfseries
+    \HebrewLine{תנובה בת-קיימא מרבית}
+    \HebrewLine{במודל דיג בשני בתי גידול}
+    \HebrewLine{עם גידול אוכלוסייה לפי בוורטון-הולט}}
+  \vspace{0.18in}
+  {\fontsize{15}{19}\selectfont \HebrewLine{\StudentNameHebrew}}
+
+  \vspace{0.40in}
+  {\fontsize{23}{28}\selectfont\bfseries
+    Maximum Sustainable Yield\par
+    in a Two-Patch Fishery Model\par
+    with Beverton--Holt Growth\par}
+  \vspace{0.18in}
+  {\fontsize{14}{18}\selectfont \StudentNameEnglish\par}
+
+  \vfill
+  {\fontsize{13}{18}\selectfont
+    \HebrewLine{מנחה: פרופ' חגי כתריאל}}
+  {\fontsize{12}{17}\selectfont Advisor: Prof. Haggai Katriel\par}
+  \vspace{0.42in}
+  {\fontsize{12}{16}\selectfont 2026\par}
+\end{center}
+\end{document}
