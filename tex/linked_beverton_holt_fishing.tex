@@ -9,13 +9,16 @@
 \numberwithin{equation}{section}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
-\title{Beverton--Holt Model for Populations on Patches with Harvesting:\\ Preventing Extinction and Optimizing Yield}
+\title{Maximum Sustainable Yield\\ in a Two-Patch Fishery Model\\ with Beverton--Holt Growth}
 \author{}
 \date{\today}
 \begin{document}
 \maketitle
 \begin{abstract}
-This paper studies Beverton--Holt population dynamics on one patch and
+Sustainable fishing requires balancing current catches with the fish
+populations that support future harvests. Movement between habitats makes
+harvesting decisions in one location affect populations elsewhere.
+This project studies Beverton--Holt population dynamics on one patch and
 on two linked patches, with harvesting represented by fishing effort.
 For the single-population model, we derive the equilibria, the
 extinction criterion, and the effort that maximizes sustainable yield.
@@ -28,19 +31,81 @@ linked population can persist. We then formulate the yield-maximization
 problem for the linked model with fishing. A change from effort
 variables to equilibrium population variables makes the problem
 convex, so the Karush--Kuhn--Tucker conditions give global optimality
-certificates. This leads to several possible maximizing strategies:
+certificates. We examine four families of candidate harvesting strategies:
 an interior fishing strategy, complete harvest in one patch, protection
 of a source patch while harvesting a sink patch, and no-take marine
 reserve boundaries. Numerical plots compare the analytic conditions
 with simulated dynamics and illustrate candidate harvesting strategies
 across model parameters.
 \end{abstract}
-\section{The Single Population}
+
+\section{Introduction}
+Fishery management involves obtaining catches while maintaining fish
+populations over time. This leads to a basic question: how much can be
+harvested without reducing the population's ability to support future
+catches? In practice, the answer
+also involves uncertainty, economic objectives, and management rules.
+Kvamsdal et al.\ \cite{kvamsdal-2016} review how harvest control rules
+connect information about fish stocks with decisions about harvesting.
+
+\medskip
+Mathematical population models provide a way to study the relation between
+growth, harvesting, and persistence. This thesis uses the Beverton--Holt
+map, a discrete-time model with density-dependent growth originating in
+the study of exploited fish populations \cite{beverton-holt-1957}.
+Within this deterministic model, a sustainable yield is a catch maintained
+at an equilibrium under a fixed harvesting policy. Increasing the
+harvested fraction can increase the immediate catch while reducing the
+population available for later catches. The aim is therefore to maximize
+the equilibrium yield while accounting for the resulting population size.
+An explicit example is the square-root rule studied by Filar and
+Streipert \cite{filar-streipert-2022}: for a single Beverton--Holt population
+with constant parameters and growth factor $r>1$, the fraction left after
+harvesting at maximum sustainable yield is $1/\sqrt{r}$. We derive the
+equivalent optimal harvesting fraction $e^*=1-1/\sqrt{r}$ below.
+
+\medskip
+Spatial structure adds another part to this problem. Fish populations in
+different locations may be connected by movement, so harvesting in one
+location can affect the population in another. Tuck and Possingham
+\cite{tuck-possingham-2000} studied harvesting in two connected populations
+with one protected patch, using an objective based on discounted economic
+returns. Their work illustrates how dispersal and reserve placement affect
+the balance between catch and spawning-stock abundance. Franco and
+Ruiz-Herrera \cite{franco-ruiz-herrera-2015} studied connectivity in simple
+two-patch population models and showed that it can increase or decrease
+total population size. Thus, the effect of connecting patches depends on
+the local growth conditions and the amount of dispersal.
+Grumbach et al.\ \cite{grumbach-2023} give exact conditions for these
+effects and show that the largest equilibrium population can occur at an
+intermediate dispersal rate.
+
+\medskip
+Here we study one population and then two linked populations with
+Beverton--Holt growth. In the linked model, the dispersal rate is fixed,
+and harvesting removes a constant fraction from each patch after growth
+and movement. We ask when the population becomes extinct, how the two
+harvesting fractions should be chosen to maximize total equilibrium
+catch, and when it is optimal to leave one patch unfished. The model
+keeps growth and movement parameters constant and does not include
+harvesting costs or environmental variability. It therefore isolates the
+effects of population growth and dispersal on sustainable yield.
+
+\medskip
+We first derive the single-population equilibria and optimal harvesting
+fraction. We then examine persistence and connectivity in the linked
+model before adding harvesting. For the yield-maximization problem,
+we express the constraints in terms of equilibrium populations and use
+the Karush--Kuhn--Tucker conditions to identify and certify optimal
+strategies. Numerical calculations illustrate the extinction boundaries
+and the different harvesting strategies.
+
+\section{Single-Patch Fishery Model}
 \subsection{Beverton--Holt Model}
 We model the population with the Beverton--Holt map. This model was
 introduced by Beverton and Holt in their study of exploited fish
 populations \cite{beverton-holt-1957}. Let $N_t \geq 0$ denote the
-population at time $t$. One intuitive way to write the model is
+population at time $t$. The model is
 \begin{equation*}
     N_{t+1}
     = \frac{rN_t}{1+\frac{r-1}{K_{\mathrm{eq}}}N_t}.
@@ -102,7 +167,7 @@ not be negative. Thus,
         r>1: & N^*=0 \text{ and } N^*=K(r-1) \text{ are equilibria}.
     \end{cases}
 \end{equation*}
-\subsection{Stability}
+\subsection{Extinction and Survival Without Fishing}
 Stability describes what happens after a small perturbation. If the
 population starts close to an equilibrium and stays close, the
 equilibrium is stable. If the population also returns to the equilibrium
@@ -200,7 +265,7 @@ At the positive equilibrium,
 \end{equation*}
 Consequently, whenever the positive equilibrium exists, $r>1$, it is
 locally asymptotically stable.
-\section{Introduction of Fishing Effort}
+\subsection{Extinction and Survival with Fishing}
 We now introduce a fishing effort parameter $e$, where
 \begin{equation*}
     0 \leq e \leq 1.
@@ -213,7 +278,7 @@ after reproduction. With fishing, the one-population model becomes
     = F_e(N_t)
     = (1-e)\frac{K r N_t}{K+N_t}.
 \end{equation}
-\subsection{Equilibria}
+\subsubsection{Equilibria and Extinction Criterion}
 An equilibrium satisfies $F_e(N^*)=N^*$. Using \eqref{eq:fishing-map},
 this gives
 \begin{equation*}
@@ -269,7 +334,7 @@ is less than $1$, so the positive equilibrium is locally stable.
     criterion $e_c=1-\frac{1}{r}$ from
     \eqref{eq:fishing-extinction-effort}.}
 \end{figure}
-\subsection{Maximizing Fishing Yield}
+\subsection{Maximum Sustainable Yield}
 From a management point of view, survival alone is not the only
 question. Once fishing is allowed, there is a natural pressure to ask how
 much can be taken now while still leaving enough population for the same
@@ -330,7 +395,7 @@ $e^*\approx 0.155$, while the extinction threshold from
     line marks the extinction threshold from
     \eqref{eq:fishing-extinction-effort}.}
 \end{figure}
-\section{Linked Two-Population Model}
+\section{Extinction and Survival in Two Patches}
 We now introduce two linked patches, denoted by $A$ and $B$. The
 population sizes in these patches at time $t$ are $N_A(t)$ and
 $N_B(t)$. Since the patches may have different local growth conditions,
@@ -359,7 +424,7 @@ Thus, for $0\leq m\leq 1$, the linked model without fishing is
 \end{equation}
 When $m=0$, the two populations are independent. When $m=1$, the two
 post-growth populations exchange locations completely at each time step.
-\subsection{Equilibria}
+\subsection{Equilibria Without Fishing}
 An equilibrium of the linked model is a pair $(N_A^*,N_B^*)$ satisfying
 \begin{equation*}
     \begin{aligned}
@@ -390,8 +455,9 @@ the total equilibrium population. One might expect dispersal to only
 redistribute the same total population between the two locations.
 However, dispersal can change the total equilibrium size.
 
-This subsection reproduces an effect from \textbf{[paper
-placeholder]}. %TODO REPLACE palceholder
+This subsection illustrates the connectivity effect studied by Franco and
+Ruiz-Herrera \cite{franco-ruiz-herrera-2015}, using a different choice of
+parameters.
 
 Consider the symmetric scale case
 \begin{equation*}
@@ -423,6 +489,10 @@ Therefore,
     N_A^*+N_B^*\approx1.0507.
 \end{equation*}
 In this example, dispersal increases the total equilibrium population.
+The total returns to the no-dispersal value exactly at $m=1/2$:
+it is above $1$ for $0<m<1/2$ and below $1$ for $1/2<m\leq1$.
+This follows from Grumbach et al.\ \cite[Lemma~3 and Theorem~1]{grumbach-2023},
+whose carrying capacities correspond to $K_i(r_i-1)$ in our notation.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{plots/linked_connection_effect_ra1_8_rb1_2.pdf}
@@ -627,7 +697,7 @@ when $m=0$. When $m=1$, the condition becomes $r_Ar_B\leq1$.
     Random simulated points are green when the population survives and
     red when it goes extinct.}
 \end{figure}
-\section{Linked Two-Population Model with Fishing Effort}
+\subsection{Introducing Fishing Effort}
 We now add fishing to the linked two-population model. The effort
 $e_A$ is applied to population $A$, and $e_B$ is applied to population
 $B$, after local growth and movement. Thus, for $0\leq e_A,e_B\leq1$,
@@ -651,7 +721,7 @@ the model becomes
 \end{equation}
 When $e_A=e_B=0$, this reduces to the linked model
 \eqref{eq:linked-model}.
-\subsection{Equilibria}
+\subsubsection{Equilibria}
 An equilibrium of the linked fishing model is a pair
 $(N_A^*,N_B^*)$ satisfying
 \begin{equation}
@@ -712,7 +782,7 @@ equilibrium equation gives a cubic equation for $N_A^*$, similar to the
 no-fishing cubic in \eqref{eq:linked-equilibrium-cubic}. Thus fishing
 changes the coefficients of the algebraic equation, but it does not
 increase the degree of the equilibrium problem.
-\subsection{Extinction Criterion}
+\subsubsection{Extinction Criterion}
 To study extinction with fishing, we linearize
 \eqref{eq:linked-fishing-model} at $(0,0)$. The linearized matrix is
 \begin{equation}
@@ -876,17 +946,17 @@ $m=0.2$, complete fishing in patch $B$ is possible when patch $A$ is
 lightly fished, but complete fishing in patch $A$ is not possible even
 when patch $B$ is unfished. In panel (e), where $m=0.3$, neither patch
 can be fished completely.
-\subsection{Maximizing Fishing Yield}
+\section{Maximum Sustainable Yield in Two Patches}
 
 As in the single-patch model, survival is not the only question. Once the
 linked system can persist, we can ask which fishing efforts give the
 largest sustainable equilibrium yield. The difference is that now the two
 patches interact through dispersal, so changing the effort in one patch
 also changes the equilibrium population in the other. This section
-formulates that optimization problem and then classifies the possible
-maximizers.
+formulates that optimization problem and examines four families of
+candidate maximizers.
 
-\subsubsection{Karush--Kuhn--Tucker Conditions}
+\subsection{Karush--Kuhn--Tucker Conditions}
 
 We will actively use the Karush--Kuhn--Tucker conditions to certify the
 maximizing candidate in each case. Since the yield problem is a
@@ -953,7 +1023,7 @@ candidate satisfies
 \eqref{eq:kkt-primal-feasibility}--\eqref{eq:kkt-stationarity},
 we have proved that it is a global maximizer, not merely a local candidate.
 
-\subsubsection{Problem Formulation}
+\subsection{Problem Formulation}
 
 We first formulate the problem in the original effort variables. For fixed
 parameters $K_A,K_B>0$, $r_A,r_B\geq0$, and $0\leq m\leq1$, define
@@ -1163,7 +1233,7 @@ The cases below are active-set KKT certificates for
 the active constraints and verify
 \eqref{eq:kkt-primal-feasibility}--\eqref{eq:kkt-stationarity}.
 
-\subsubsection{Interior Case}
+\subsection{Interior Case}
 
 The interior case means that none of the four constraints in
 \eqref{eq:population-constraints-kkt-form} is active. Equivalently,
@@ -1327,7 +1397,7 @@ global maximizer of the population-domain problem
     maximum found on the plotted grid.}
 \end{figure}
 
-\subsubsection{Complete-Harvest Boundaries}
+\subsection{Complete-Harvest Boundaries}
 
 We next consider the boundary where one patch has zero remaining
 population after harvesting. Start with
@@ -1417,7 +1487,7 @@ Since $Y'(N_B)=F_B'(N_B)-1$ and $F_B'$ is decreasing, this means
 throughout the feasible interval. Thus $Y$ is increasing on the whole
 boundary interval, so the constrained boundary maximum is attained at the
 right endpoint. This right endpoint is the case $N_B=G_B(0,N_B)$, hence
-$e_B=0$, and it is treated in the next section.
+$e_B=0$, and it is treated in the next subsection.
 
 Now derive the KKT multiplier. At this candidate, the active constraint is
 $g_1=-N_A=0$. The other constraints are inactive, so complementary
@@ -1518,7 +1588,7 @@ and yield
     effort domain, and as $N_A=0$ or $N_B=0$ in the population domain.}
 \end{figure}
 
-\subsubsection{Protect Source, Harvest Sink Endpoint}
+\subsection{Protect Source, Harvest Sink Endpoint}
 
 The previous boundary calculation also points to an important endpoint.
 On the boundary $N_A=0$, the right endpoint of the feasible interval
@@ -1711,7 +1781,7 @@ The yield is
     boundary.}
 \end{figure}
 
-\subsubsection{No-Take Boundaries}
+\subsection{No-Take Boundaries}
 
 One patch is protected from fishing, while the other patch may still be
 harvested partially. This is an important case, since a common
@@ -1929,7 +1999,7 @@ candidate is globally optimal.
     $N_B=G_B(N_A,N_B)$ as part of the feasible-region boundary.}
 \end{figure}
 
-\subsubsection{KKT Maximizer Certificates}
+\subsection{KKT Maximizer Certificates}
 
 First check whether the linked population can persist without fishing. If
 it cannot, then there is no positive sustainable yield to maximize. After
@@ -2094,13 +2164,44 @@ and apply KKT active-set analysis. This extension is outside the scope of
 the present paper, where the goal was to understand the effect of fishing
 efforts for a fixed linked system.
 
-\begin{thebibliography}{9}
+\begin{thebibliography}{99}
+\interlinepenalty=10000
+
+\bibitem{kvamsdal-2016}
+S. F. Kvamsdal et al.
+Harvest control rules in modern fisheries management.
+\textit{Elementa: Science of the Anthropocene}, 4:000114, 2016.
+doi: \href{https://doi.org/10.12952/journal.elementa.000114}{\nolinkurl{10.12952/journal.elementa.000114}}.
 
 \bibitem{beverton-holt-1957}
 R. J. H. Beverton and S. J. Holt.
 \textit{On the Dynamics of Exploited Fish Populations}.
 Fishery Investigations, Series II, Volume XIX.
 Ministry of Agriculture, Fisheries and Food, London, 1957.
+
+\bibitem{filar-streipert-2022}
+J. Filar and S. Streipert.
+Square root identities for harvested Beverton--Holt models.
+\textit{Journal of Theoretical Biology}, 549:111199, 2022.
+doi: \href{https://doi.org/10.1016/j.jtbi.2022.111199}{\nolinkurl{10.1016/j.jtbi.2022.111199}}.
+
+\bibitem{tuck-possingham-2000}
+G. N. Tuck and H. P. Possingham.
+Marine protected areas for spatially structured exploited stocks.
+\textit{Marine Ecology Progress Series}, 192:89--101, 2000.
+
+\bibitem{franco-ruiz-herrera-2015}
+D. Franco and A. Ruiz-Herrera.
+To connect or not to connect isolated patches.
+\textit{Journal of Theoretical Biology}, 370:72--80, 2015.
+doi: \href{https://doi.org/10.1016/j.jtbi.2015.01.029}{\nolinkurl{10.1016/j.jtbi.2015.01.029}}.
+
+\bibitem{grumbach-2023}
+C. Grumbach, F. N. Reurik, J. Segura, D. Franco, and F. M. Hilker.
+The effect of dispersal on asymptotic total population size in discrete-
+and continuous-time two-patch models.
+\textit{Journal of Mathematical Biology}, 87:60, 2023.
+doi: \href{https://doi.org/10.1007/s00285-023-01984-8}{\nolinkurl{10.1007/s00285-023-01984-8}}.
 
 \bibitem{kinderlehrer-stampacchia-1980}
 D. Kinderlehrer and G. Stampacchia.
