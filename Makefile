@@ -23,7 +23,7 @@ LINKED_EXTINCTION_PLOTS := \
 PLOTS := $(COBWEB_PLOT) $(FISHING_PLOT) $(YIELD_PLOT) $(LINKED_NO_FISHING_PLOT) $(LINKED_CONNECTION_PLOT) $(POPULATION_DOMAIN_YIELD_VIEW_PLOTS) $(NUMERIC_YIELD_ZONE_MAP) $(LINKED_EXTINCTION_PLOTS)
 PLOT_COMMON := plot_generators/common.py
 
-.PHONY: all pdf clean
+.PHONY: all pdf zone-map-style clean
 
 all: pdf
 
@@ -49,9 +49,12 @@ $(LINKED_CONNECTION_PLOT): plot_generators/linked_connection_effect.py linked_mo
 $(POPULATION_DOMAIN_YIELD_VIEW_PLOTS) &: plot_generators/population_domain_yield_views.py $(PLOT_COMMON)
 	$(PYTHON) -m plot_generators.population_domain_yield_views
 
-$(NUMERIC_YIELD_ZONE_MAP): plot_generators/numeric_yield_zone_map.py $(PLOT_COMMON)
-	$(PYTHON) -m plot_generators.numeric_yield_zone_map --m 0.45 --k-a 2 --k-b 1 --grid-size 151 --effort-grid-size 40 --local-effort-grid-size 100 --steps 30 --local-steps 300 --output $(NUMERIC_YIELD_ZONE_MAP)
-	powershell -NoProfile -Command "Remove-Item -Force -ErrorAction SilentlyContinue '$(NUMERIC_YIELD_ZONE_MAP:.pdf=.png)'"
+$(NUMERIC_YIELD_ZONE_MAP): plot_generators/numeric_yield_zone_map.py plot_generators/equilibrium_simulation.py $(PLOT_COMMON)
+	$(PYTHON) -m plot_generators.numeric_yield_zone_map --m 0.45 --k-a 2 --k-b 1 --grid-size 151 --effort-grid-size 40 --local-effort-grid-size 9 --output $(NUMERIC_YIELD_ZONE_MAP)
+
+# Rebuild the presentation from the saved numerical grid without repeating the search.
+zone-map-style:
+	$(PYTHON) -m plot_generators.numeric_yield_zone_map --m 0.45 --k-a 2 --k-b 1 --data-input $(NUMERIC_YIELD_ZONE_MAP:.pdf=.npz) --output $(NUMERIC_YIELD_ZONE_MAP)
 
 $(LINKED_EXTINCTION_PLOTS) &: plot_generators/linked_extinction_maps.py $(PLOT_COMMON)
 	$(PYTHON) -m plot_generators.linked_extinction_maps

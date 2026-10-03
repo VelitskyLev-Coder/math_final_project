@@ -2028,24 +2028,28 @@ $G_A(N_A,N_B)-N_A$
 \end{center}
 
 Figure~\ref{fig:numeric-zone-map} illustrates the candidate families
-using a finite-time search in effort variables. For each $(r_A,r_B)$,
-a coarse grid is evaluated after 30 time steps, followed by a local
-refinement after 300 steps around the coarse winner. The colors classify
-the effort pair with the largest final-step yield found by this search.
-Near $\rho(M_f)=1$, transient yield can differ from sustainable yield,
-and local refinement can miss the equilibrium optimum. The colors are
-therefore an approximate illustration, not an independent verification
-of the KKT certificates. The dashed and dotted curves are the analytic
-boundaries from the conditions in the table.
+using a numerical search in effort variables. For each $(r_A,r_B)$,
+we evaluate a $40\times40$ effort grid and repeatedly refine the
+neighborhood of the best pair until the effort spacing is below $10^{-5}$.
+Each yield is computed from the population map, with safeguarded Newton
+steps to accelerate convergence. Upper and lower population bounds give
+bounds on the sustainable yield; the calculation stops when their
+difference is at most $10^{-12}$ plus $10^{-9}$ times the upper yield bound.
+Thus, a temporary catch from a declining population is not treated as
+a sustainable yield. Yields below $10^{-10}$ are treated as zero.
+The colors classify the best effort pair found numerically.
+They remain an approximate illustration: the effort search
+and the plotted parameter grid have finite resolution. The numbered
+curves are the analytic boundaries from the conditions in the table.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{plots/numeric_yield_zone_map_ka2_kb1_m0_45.pdf}
-    \caption{Finite-time illustration of harvesting candidate families
+    \includegraphics[width=\textwidth]{plots/numeric_yield_zone_map_ka2_kb1_m0_45.pdf}
+    \caption{Numerical illustration of harvesting candidate families
     with $m=0.45$, $K_A=2$, and $K_B=1$. Colors classify the efforts
     selected by the simulation search, subject to the limitations above.
-    The overlaid curves are the analytic boundaries from the KKT
-    certificates above.}
+    The inset gives the equations for the numbered analytic boundaries
+    from the KKT certificates above.}
     \label{fig:numeric-zone-map}
 \end{figure}
 
@@ -2073,7 +2077,7 @@ This led to several possible optimal strategies: an interior fishing
 strategy, complete harvest in one patch, protection of a source patch
 while harvesting a sink patch, and no-take marine reserve boundaries.
 The numerical region map illustrates these cases, subject to the
-finite-time and local-search limitations described above.
+numerical resolution and search limitations described above.
 \\
 One natural future direction is to optimize the connectivity itself. In
 this paper the movement parameter $m$ is fixed. In some real-world
