@@ -352,7 +352,7 @@ def plot_condition_overlays(
     return markers
 
 
-def add_equation_key(ax, *, k_a: float, k_b: float, transform=None) -> None:
+def add_equation_key(ax, *, transform=None) -> None:
     """Explain the analytic overlays in unused space in the interior region."""
     transform = ax.transAxes if transform is None else transform
     card = FancyBboxPatch(
@@ -378,19 +378,17 @@ def add_equation_key(ax, *, k_a: float, k_b: float, transform=None) -> None:
     text(0.308, 0.830, r"$q(r_A+r_B)-(1-2m)r_A r_B=1$")
     heading(0.782, "2", "Complete harvest", CURVE_COLORS["complete"], "--")
     text(0.308, 0.744, r"$r_A=1\ \mathrm{or}\ r_B=q^{-2}\quad (A\leftrightarrow B)$")
-    heading(0.696, "3", "Protect source, harvest sink", CURVE_COLORS["source"], "-.")
+    heading(0.696, "3", "Protect source, completely harvest sink", CURVE_COLORS["source"], "-.")
     text(0.308, 0.660, r"$r_B=H(r_A)\ \mathrm{or}\ r_A=H(r_B)$")
     text(0.308, 0.612, r"$H(s)=\dfrac{q(qs-1)}{q^3s+2m-1}$")
     text(0.308, 0.557, "4  Interior / no-take", size=13.5, weight="bold")
-    coefficient_a = "" if k_a == 1 else f"{k_a:g}"
-    coefficient_b = "" if k_b == 1 else f"{k_b:g}"
     for y, suffix, style, equation in [
-        (0.515, "A", ":", rf"${coefficient_a}(x-1)(1-qx)={coefficient_b}m\,y(y-1)$"),
-        (0.472, "B", "--", rf"${coefficient_b}(y-1)(1-qy)={coefficient_a}m\,x(x-1)$"),
+        (0.515, "A", ":", r"$K_A(x-1)(1-qx)=m K_B\,y(y-1)$"),
+        (0.472, "B", "--", r"$K_B(y-1)(1-qy)=m K_A\,x(x-1)$"),
     ]:
         ax.plot([0.308, 0.351], [y, y], transform=transform,
                 color=CURVE_COLORS["interior"], linestyle=style, linewidth=2, zorder=9)
-        text(0.367, y, suffix + ": " + equation, size=13)
+        text(0.367, y, suffix + ": " + equation, size=11.8)
     text(0.308, 0.431, "Equations apply to the plotted segments.", size=11,
          color="#596975")
 
@@ -401,12 +399,12 @@ def add_map_labels(ax, r_a_values, r_b_values, zones, markers, *, inset_key: boo
     card_mask = equation_card_mask(r_a_values, r_b_values) if inset_key else np.zeros_like(zones, dtype=bool)
     for zone, x, y, label, size in [
         (EXTINCTION, 0.49, 0.52, "Extinction\nzero yield", 13),
-        (COMPLETE_A, 0.49, 4.22, "Complete\nharvest\nin A", 14),
-        (COMPLETE_B, 4.18, 0.49, "Complete harvest\nin B", 14),
-        (PROTECT_B_HARVEST_A, 0.35, 2.87, "Protect B\nharvest A", 12),
-        (PROTECT_A_HARVEST_B, 2.58, 0.27, "Protect A\nharvest B", 12),
-        (NO_TAKE_B, 0.78, 1.84, "No take\nin B", 13),
-        (NO_TAKE_A, 2.05, 1.16, "No take in A", 14),
+        (COMPLETE_A, 0.49, 4.22, "Completely\nharvest A", 14),
+        (COMPLETE_B, 4.18, 0.49, "Completely harvest B", 14),
+        (PROTECT_B_HARVEST_A, 0.35, 2.87, "Protect B\ncompletely\nharvest A", 10),
+        (PROTECT_A_HARVEST_B, 2.58, 0.27, "Protect A\ncompletely harvest B", 10),
+        (NO_TAKE_B, 0.78, 1.84, "Protect B", 13),
+        (NO_TAKE_A, 2.05, 1.16, "Protect A", 14),
         (INTERIOR, 3.94, 1.69, "Interior\n" + r"$0<e_A,e_B<1$", 15),
     ]:
         region = (zones == zone) & ~card_mask
@@ -476,11 +474,23 @@ def plot_zone_map(
     ax.set_xlabel(r"$r_A$", fontsize=18, labelpad=8)
     ax.set_ylabel(r"$r_B$", fontsize=18, labelpad=8)
     ax.tick_params(labelsize=14, length=4, color="#596975")
+    # On either growth axis the extinction threshold is (1-m)r = 1.
+    if m < 1:
+        threshold = 1 / (1 - m)
+        for x, y, offset, marker in [
+            (threshold, 0, (0, -23), "|"),
+            (0, threshold, (-28, -5), "_"),
+        ]:
+            if (r_a_values[0] <= x <= r_a_values[-1]
+                    and r_b_values[0] <= y <= r_b_values[-1]):
+                ax.plot(x, y, marker=marker, color="#243847", clip_on=False)
+                ax.annotate(r"$q^{-1}$", (x, y), xytext=offset,
+                            textcoords="offset points", ha="center", fontsize=11)
     ax.grid(True, color="#314553", linewidth=0.4, alpha=0.12)
     for spine in ax.spines.values():
         spine.set_color("#596975")
         spine.set_linewidth(0.8)
-    fig.text(0.105, 0.965, "Harvesting strategies", fontsize=23,
+    fig.text(0.105, 0.965, "Optimal harvesting strategies", fontsize=23,
              fontweight="bold", color="#243847")
     fig.text(0.105, 0.934,
              rf"$m={m:g}\quad K_A={k_a:g}\quad K_B={k_b:g}$"
@@ -489,7 +499,7 @@ def plot_zone_map(
     inset_key = np.all(zones[equation_card_mask(r_a_values, r_b_values)] == INTERIOR)
     add_map_labels(ax, r_a_values, r_b_values, zones, markers, inset_key=inset_key)
     if inset_key:
-        add_equation_key(ax, k_a=k_a, k_b=k_b)
+        add_equation_key(ax)
     else:
         # Keep the equations outside when other parameters put a boundary here.
         fig.set_size_inches(13.5, 9.0)
@@ -497,7 +507,7 @@ def plot_zone_map(
         key_ax = fig.add_axes((0.64, 0.24, 0.35, 0.66))
         key_ax.set(xlim=(0.27, 0.995), ylim=(0.395, 0.995))
         key_ax.axis("off")
-        add_equation_key(key_ax, k_a=k_a, k_b=k_b, transform=key_ax.transData)
+        add_equation_key(key_ax, transform=key_ax.transData)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     with plt.rc_context({"pdf.fonttype": 42}):

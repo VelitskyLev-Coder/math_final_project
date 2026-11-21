@@ -1,6 +1,7 @@
 TEX_DIR := tex
 TEX_MAIN := linked_beverton_holt_fishing.tex
 PDFLATEX := pdflatex
+LATEXMK := latexmk
 XELATEX := xelatex
 TITLE_PAGE := $(TEX_DIR)/braude_title_page.pdf
 PYTHON := ./.venv/Scripts/python.exe -B
@@ -29,9 +30,9 @@ PLOT_COMMON := plot_generators/common.py
 
 all: pdf
 
+# Recheck even cached builds so an unresolved citation fails every invocation.
 pdf: $(TITLE_PAGE) $(PLOTS)
-	cd $(TEX_DIR) && $(PDFLATEX) -interaction=nonstopmode -halt-on-error $(TEX_MAIN)
-	cd $(TEX_DIR) && $(PDFLATEX) -interaction=nonstopmode -halt-on-error $(TEX_MAIN)
+	cd $(TEX_DIR) && $(LATEXMK) -g -pdf -pdflatex="$(PDFLATEX)" -interaction=nonstopmode -halt-on-error -Werror $(TEX_MAIN)
 
 $(TITLE_PAGE): $(TEX_DIR)/braude_title_page.tex $(TEX_DIR)/assets/braude_logo.png
 	cd $(TEX_DIR) && $(XELATEX) -interaction=nonstopmode -halt-on-error braude_title_page.tex

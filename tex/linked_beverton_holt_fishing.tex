@@ -3,6 +3,7 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{float}
+\floatplacement{figure}{H}
 \usepackage{subcaption}
 \usepackage{array}
 \usepackage{pdfpages}
@@ -35,10 +36,13 @@ linked population can persist. We then formulate the yield-maximization
 problem for the linked model with fishing. A change from effort
 variables to equilibrium population variables makes the problem
 convex, so the Karush--Kuhn--Tucker conditions give global optimality
-certificates. We examine four families of candidate harvesting strategies:
-an interior fishing strategy, complete harvest in one patch, protection
-of a source patch while harvesting a sink patch, and no-take marine
-reserve boundaries. Numerical plots compare the analytic conditions
+certificates. We show that a positive-yield optimum belongs to one
+of four families: interior strategies in which both patches are fished,
+complete harvest in one patch with partial harvest in the other,
+protection of a source with complete harvest of its sink, and protection
+of one patch as a no-take reserve with partial harvest in the other. We determine
+the conditions on the model parameters under which each strategy is
+optimal. Numerical plots compare the analytic conditions
 with simulated dynamics and illustrate candidate harvesting strategies
 across model parameters.
 \end{abstract}
@@ -69,8 +73,8 @@ harvesting at maximum sustainable yield is $1/\sqrt{r}$. We derive the
 equivalent optimal harvesting fraction $e^*=1-1/\sqrt{r}$ below.
 
 \medskip
-Spatial structure adds another part to this problem. Fish populations in
-different locations may be connected by movement, so harvesting in one
+Spatial structure adds a complication to this problem. Fish populations in
+different locations may be connected by movement (dispersal), so harvesting in one
 location can affect the population in another. Tuck and Possingham
 \cite{tuck-possingham-2000} studied harvesting in two connected populations
 with one protected patch, using an objective based on discounted economic
@@ -90,7 +94,7 @@ Beverton--Holt growth. In the linked model, the dispersal rate is fixed,
 and harvesting removes a constant fraction from each patch after growth
 and movement. We ask when the population becomes extinct, how the two
 harvesting fractions should be chosen to maximize total equilibrium
-catch, and when it is optimal to leave one patch unfished. The model
+catch, and when it is optimal to leave one patch unfished as a marine reserve. The model
 keeps growth and movement parameters constant and does not include
 harvesting costs or environmental variability. It therefore isolates the
 effects of population growth and dispersal on sustainable yield.
@@ -101,7 +105,9 @@ fraction. We then examine persistence and connectivity in the linked
 model before adding harvesting. For the yield-maximization problem,
 we express the constraints in terms of equilibrium populations and use
 the Karush--Kuhn--Tucker conditions to identify and certify optimal
-strategies. Numerical calculations illustrate the extinction boundaries
+strategies. For the linked model, the resulting parameter tests determine
+which harvesting strategy maximizes yield whenever a positive sustainable
+catch is possible. Numerical calculations illustrate the extinction boundaries
 and the different harvesting strategies.
 
 \section{Single-Patch Fishery Model}
@@ -127,11 +133,13 @@ This gives the equivalent form
     N_{t+1} = F(N_t)
             = \frac{K r N_t}{K + N_t},
 \end{equation}
-which is algebraically simpler in the later sections. In this
-parametrization $K$ is the equilibrium scale scaled by a factor of
-$1/(r-1)$.
-The low-density meaning of $r$ is unchanged: since $F'(0)=r$, a very
-small population is multiplied approximately by $r$ in one time step.\\
+where the per-capita growth factor for $N_t>0$ is
+$N_{t+1}/N_t=rK/(K+N_t)$. It approaches $r$ at low density and
+decreases as fish compete for limited resources. At $N_t=K$ the factor
+is $r/2$. Thus $K$ measures habitat size or quality through the number
+of fish the habitat supports before crowding halves per-capita growth.
+
+
 A cobweb plot gives a geometric picture of the iteration. Starting from
 $N_t$, we apply the function by moving vertically to the point
 $(N_t,F(N_t))$. The height of this point is the next population value,
@@ -193,7 +201,7 @@ nearby initial populations converge to $N^*$:
     \lim_{t\to\infty}N_t=N^*.
 \end{equation*}
 For the one-dimensional maps used in this paper, stability can be
-checked from the derivative. If $F$ is continuously differentiable near
+checked using the derivative. If $F$ is continuously differentiable near
 an equilibrium $N^*$ and
 \begin{equation*}
     |F'(N^*)|<1,
@@ -387,6 +395,10 @@ Therefore, for $r>1$, the yield-maximizing effort is
     \label{eq:yield-optimal-effort}
     e^*=1-\frac{1}{\sqrt{r}}.
 \end{equation}
+Substituting $e^*$ into \eqref{eq:yield-expression} gives the maximum
+sustainable yield $Y(e^*)=K(1-1/\sqrt r)(r-\sqrt r)=K(\sqrt r-1)^2$.
+For $r\leq1$, the sustainable yield is zero at every effort.
+
 For $r=1.4$ and $K=1$, \eqref{eq:yield-optimal-effort} gives
 $e^*\approx 0.155$, while the extinction threshold from
 \eqref{eq:fishing-extinction-effort} is $e_c\approx 0.286$.
@@ -405,7 +417,9 @@ population sizes in these patches at time $t$ are $N_A(t)$ and
 $N_B(t)$. Since the patches may have different local growth conditions,
 we use patch-specific parameters: patch $A$ has parameters $r_A$ and
 $K_A$, while patch $B$ has parameters $r_B$ and $K_B$.
-The local Beverton-Holt growth functions are
+The scales $K_A$ and $K_B$ measure the effective habitat sizes of the
+patches: each is the population at which its local per-capita growth
+factor falls to half its low-density value. The local growth functions are
 \begin{equation*}
     F_A(N_A)=\frac{K_A r_A N_A}{K_A+N_A},
     \qquad
@@ -653,12 +667,19 @@ weights $w_A,w_B$ satisfying
 \begin{equation*}
     (w_A,w_B)M=(w_A,w_B).
 \end{equation*}
+Thus $(w_A,w_B)$ is a left eigenvector of $M$ for eigenvalue $1$.
 Define the weighted total population
 \begin{equation*}
     V_t=w_A N_A(t)+w_B N_B(t).
 \end{equation*}
-Multiplying the two population equations by $w_A$ and $w_B$ and adding,
-we obtain
+Weight the two equations in \eqref{eq:linked-model} by $w_A$ and $w_B$,
+respectively, and add. The coefficient of $F_A(N_A(t))$ is
+$(1-m)w_A+mw_B$, and that of $F_B(N_B(t))$ is $mw_A+(1-m)w_B$.
+The left-eigenvector identity gives
+\[
+r_A((1-m)w_A+mw_B)=w_A,\qquad r_B(mw_A+(1-m)w_B)=w_B .
+\]
+Substituting the two growth functions therefore gives
 \begin{equation*}
     V_{t+1}=\sum_{i\in\{A,B\}}w_i
     \frac{K_iN_i(t)}{K_i+N_i(t)}.
@@ -675,7 +696,10 @@ Thus $V_t$ is decreasing and bounded below by $0$, so $V_t\to L$
 for some $L\geq0$. Therefore $V_t-V_{t+1}\to0$.
 Since every term in the sum is nonnegative, each term tends to zero.
 As $w_A,w_B>0$, this forces $N_A(t)\to0$ and $N_B(t)\to0$.
-Hence $V_t\to0$, and extinction occurs at $\rho(M)=1$.
+Hence every nonnegative initial population converges to extinction.
+Moreover, $V_t\leq V_0$ bounds each $N_i(t)$ by $V_0/w_i$, so a
+population starting close to zero stays close to zero. Thus $V$ is a
+Lyapunov function proving global asymptotic stability at $\rho(M)=1$.
 
 When $m=0$, the patches are independent and the single-population
 criterion applies to each. If, for example, $r_A=0$, patch $B$ follows
@@ -784,8 +808,8 @@ $N_B^*$ gives
 Substituting \eqref{eq:linked-fishing-nb-from-na} into the second
 equilibrium equation gives a cubic equation for $N_A^*$, similar to the
 no-fishing cubic in \eqref{eq:linked-equilibrium-cubic}. Thus fishing
-changes the coefficients of the algebraic equation, but it does not
-increase the degree of the equilibrium problem.
+changes the coefficients of the polynomial arising in the equilibrium
+problem, while its degree remains at most three.
 \subsubsection{Extinction Criterion}
 To study extinction with fishing, we linearize
 \eqref{eq:linked-fishing-model} at $(0,0)$. The linearized matrix is
@@ -842,6 +866,10 @@ $0\leq e_A,e_B\leq1$ is therefore
     \qquad\text{and}\qquad
     Ce_A+D>0.
 \end{equation}
+The boundary curves in Figure~\ref{fig:fishing-extinction-maps} are the
+portions of $\rho(M_f)=1$ within the effort square. For $0<m<1$ and
+positive growth rates, the determinant equation describes a hyperbola
+when $m\ne 1/2$ and a straight line when $m=1/2$, since then $C=0$.
 The second condition does not describe another extinction mechanism. It
 only restricts the threshold inequality to one side of the vertical line
 $Ce_A+D=0$ where division by $Ce_A+D$ gives the correct extinction
@@ -899,7 +927,7 @@ large as any diagonal entry. Hence $\rho(M_f)>1$, so global extinction
 cannot occur when $Ce_A+D\leq0$. Thus, for $0<m<1/2$, the condition
 $Ce_A+D>0$ is not just a technical detail of the division; it removes a
 part of the unit square where extinction is impossible.
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \begin{subfigure}{0.36\textwidth}
         \centering
@@ -941,8 +969,9 @@ part of the unit square where extinction is impossible.
     predicted by $\rho(M_f)<1$, and the black curve is the boundary
     $\rho(M_f)=1$. Random simulated points are green when the population
     survives and red when it goes extinct.}
+    \label{fig:fishing-extinction-maps}
 \end{figure}
-These plots show how dispersal affects whether complete fishing in one
+The plots in Figure~\ref{fig:fishing-extinction-maps} show how dispersal affects whether complete fishing in one
 patch is possible. For the sequence with $r_A=1.4$ and $r_B=1.2$,
 panel (c), where $m=0.1$, allows either patch to be fished completely,
 provided the other patch is only lightly fished. In panel (d), where
@@ -1126,7 +1155,9 @@ $G_A+G_B=F_A+F_B$, and hence
     +
     F_B(N_B)-N_B.
 \end{equation}
-The population-domain maximization problem is
+In fisheries terminology, the fish left after harvest are the
+\emph{escapement}. Thus $N_A$ and $N_B$ in the following maximization
+are the equilibrium escapements in the two patches. The problem is
 \begin{equation}
     \label{eq:population-maximization-problem}
     \max_{(N_A,N_B)\in\mathcal D} Y(N_A,N_B).
@@ -1245,7 +1276,7 @@ The interior case means that none of the four constraints in
     N_A>0,\qquad N_B>0,\qquad N_A<G_A(N_A,N_B),\qquad
     N_B<G_B(N_A,N_B).
 \end{equation*}
-In effort variables this means
+Both patches are partially harvested, so in effort variables
 \begin{equation*}
     0<e_A<1,
     \qquad
@@ -1349,7 +1380,7 @@ $\mathcal D$ are
 \end{equation*}
 Using the effort recovery formula \eqref{eq:effort-recovery}, these
 two inequalities are equivalent to $e_A^*>0$ and $e_B^*>0$. Written in
-parameters, they become
+terms of the model parameters, they become
 \begin{equation}
     \label{eq:interior-effort-validity}
     \scalebox{0.92}{$
@@ -1389,7 +1420,7 @@ All multipliers are zero, so dual feasibility
 global maximizer of the population-domain problem
 \eqref{eq:population-maximization-problem}.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{plots/population_domain_view_interior.pdf}
     \caption{Interior example with $K_A=K_B=1$, $r_A=1.8$,
@@ -1536,7 +1567,9 @@ in patch $A$ gives a KKT certificate when
     \qquad
     (1-m)\sqrt{r_B}>1.
 \end{equation}
-The recovered efforts are
+Thus when $A$ is a sink or at replacement ($r_A\leq1$) and $B$ is a
+sufficiently strong source ($r_B>(1-m)^{-2}$ for $0<m<1$), the optimal
+policy harvests all of $A$ and part of $B$. The recovered efforts are
 \begin{equation}
     \label{eq:complete-harvest-a-efforts}
     e_A^*=1,
@@ -1583,7 +1616,7 @@ and yield
     Y^*=K_A(\sqrt{r_A}-1)^2.
 \end{equation}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{plots/population_domain_view_complete_harvest.pdf}
     \caption{Complete-harvest examples. Each row shows the same parameter
@@ -1592,7 +1625,7 @@ and yield
     effort domain, and as $N_A=0$ or $N_B=0$ in the population domain.}
 \end{figure}
 
-\subsection{Protect Source, Harvest Sink Endpoint}
+\subsection{Protect the Source and Completely Harvest the Sink}
 
 The previous boundary calculation also points to an important endpoint.
 On the boundary $N_A=0$, the right endpoint of the feasible interval
@@ -1775,7 +1808,7 @@ The yield is
     K_A\bigl((1-m)r_A-1\bigr).
 \end{equation}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{plots/population_domain_view_source_endpoint.pdf}
     \caption{Protect-source, harvest-sink endpoint examples. In effort
@@ -2066,9 +2099,9 @@ are needed only to calculate the optimal populations and efforts.
     $N_B=G_B(N_A,N_B)$ as part of the feasible-region boundary.}
 \end{figure}
 
-\subsection{KKT Maximizer Certificates}
+\subsection{Summary of Optimal Harvesting Conditions}
 
-Each row below is an independent parameter test for a global yield
+Each row in the table below is an independent parameter test for a global yield
 maximizer. The no-take conditions include the persistence and endpoint
 inequalities, so they require no checks against the other rows.
 If the population cannot persist without fishing, every sustainable
@@ -2079,9 +2112,9 @@ yield is zero.
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.35}
 \begin{tabular}{
-    >{\raggedright\arraybackslash}p{0.13\textwidth}
-    >{\raggedright\arraybackslash}p{0.29\textwidth}
-    >{\raggedright\arraybackslash}p{0.30\textwidth}
+    >{\raggedright\arraybackslash}p{0.19\textwidth}
+    >{\raggedright\arraybackslash}p{0.26\textwidth}
+    >{\raggedright\arraybackslash}p{0.27\textwidth}
     >{\raggedright\arraybackslash}p{0.18\textwidth}
 }
 \hline
@@ -2097,7 +2130,7 @@ Interior
 \eqref{eq:interior-yield}
 \\
 
-Complete harvest in $A$
+Completely harvest $A$
 &
 \eqref{eq:complete-harvest-a-condition}
 &
@@ -2106,7 +2139,7 @@ Complete harvest in $A$
 \eqref{eq:complete-harvest-a-yield}
 \\
 
-Complete harvest in $B$
+Completely harvest $B$
 &
 \eqref{eq:complete-harvest-b-condition}
 &
@@ -2115,7 +2148,7 @@ Complete harvest in $B$
 \eqref{eq:complete-harvest-b-yield}
 \\
 
-Protect $B$, harvest $A$
+Protect $B$, completely harvest $A$
 &
 \eqref{eq:source-endpoint-a-sink-condition}
 &
@@ -2124,7 +2157,7 @@ Protect $B$, harvest $A$
 \eqref{eq:source-endpoint-a-sink-yield}
 \\
 
-Protect $A$, harvest $B$
+Protect $A$, completely harvest $B$
 &
 \eqref{eq:source-endpoint-b-sink-condition}
 &
@@ -2133,7 +2166,7 @@ Protect $A$, harvest $B$
 \eqref{eq:source-endpoint-b-sink-yield}
 \\
 
-No take in $A$
+Protect $A$
 &
 \eqref{eq:no-take-a-parameter-condition}
 &
@@ -2143,7 +2176,7 @@ $e_A^*=0$, and $e_B^*$ from
 $G_B(N_A,N_B)-N_B$
 \\
 
-No take in $B$
+Protect $B$
 &
 \eqref{eq:no-take-b-parameter-condition}
 &
@@ -2170,6 +2203,16 @@ The colors classify the best effort pair found numerically.
 They remain an approximate illustration: the effort search
 and the plotted parameter grid have finite resolution. The numbered
 curves are the analytic boundaries from the conditions in the table.
+The same parameter tests apply to other positive patch sizes. Scaling
+both $K_A$ and $K_B$ by the same factor preserves the strategy map;
+changing their ratio shifts the boundaries between interior fishing and
+protection of one patch.
+
+At $r_B=1.5$, increasing $r_A$ from zero first takes the system out of
+extinction. The positive-yield strategies then occur in this order:
+protect $B$ and fish $A$, fish both patches, protect $A$ and fish $B$,
+and finally fish both again. Thus full protection of $A$ is optimal
+over an intermediate range of its own growth factor.
 
 \begin{figure}[H]
     \centering
@@ -2204,7 +2247,8 @@ these variables the feasible set is convex and the yield function is
 concave, so the KKT conditions provide global optimality certificates.
 This led to several possible optimal strategies: an interior fishing
 strategy, complete harvest in one patch, protection of a source patch
-while harvesting a sink patch, and no-take marine reserve boundaries.
+with complete harvest of its sink, and no-take marine reserves with
+partial fishing in the other patch.
 The numerical region map illustrates these cases, subject to the
 numerical resolution and search limitations described above.
 \\
@@ -2221,7 +2265,10 @@ The same general method may still be useful: write the feasible
 population domain, recover the efforts from the equilibrium constraints,
 and apply KKT active-set analysis. This extension is outside the scope of
 the present paper, where the goal was to understand the effect of fishing
-efforts for a fixed linked system.
+efforts for a fixed linked system. Further extensions include allowing
+separate dispersal rates from $A$ to $B$ and from $B$ to $A$, linking
+more than two patches, and replacing Beverton--Holt growth with other
+density-dependent growth functions.
 
 \begin{thebibliography}{99}
 \interlinepenalty=10000
